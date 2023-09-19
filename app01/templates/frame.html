@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block page-css %}
+
+    {% endblock %}
+</head>
+<body>
+<div class="all_part">
+    <div class="left">
+{#        此处应该是用户头像#}
+        <img src="{% static 'image/introduction_photo.jpg' %}">
+        <div>用户名</div>
+    </div>
+    <div class="right">
+        <div class="content">
+            {% block page-main %}
+
+            {% endblock %}
+        </div>
+    </div>
+
+</div>
+
+
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+{% block page-js %}
+
+{% endblock %}
+</body>
+</html>
