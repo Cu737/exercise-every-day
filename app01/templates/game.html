@@ -4,27 +4,71 @@
 {% block page-css %}
     <title>天天运动</title>
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'css/game.css' %}">
 {% endblock %}
 
 {% block page-main %}
     {#    该盒子数量应该随着可支持运动数量灵活变通。#}
-    <div style="width: 800px;height:600px;background-color: white;margin-top: 50px;margin-left: 50px;border-radius: 15px">
+    <div class = "content" style="width: 800px;height:600px;background-color: white;margin-top: 50px;margin-left: 50px;border-radius: 15px;background-color: rgba(255, 255, 255, 0.75);">
         <div style="display:inline-block;float:left;margin-left: 10px;margin-top: 50px;width:600px;height:500px;">
-            <iframe src="http://127.0.0.1:8000/video" width="800" height="500"></iframe>
+            <iframe src="http://127.0.0.1:8000/video" width="600" height="500"></iframe>
         </div>
-        <div style="display: inline-block;margin-top:50px;margin-right:10px;float: right;height:150px;width:150px;background-color: cornflowerblue">
+        <div>
+            <div style="display: inline-block;margin-top:50px;margin-left:10px;height:150px;width:150px;background-color: cornflowerblue">
             得分
+            </div>
+        <div style="display: inline-block;margin-top:10px;margin-left:10px;height:150px;width:150px;background-color: transparent">
+            <div class = "time" style="margin-top:30px;margin-left: 37px;">3:00</div>
+            <button type="submit" id = "start-btn" class="btn btn-primary" style="margin-top:12px;margin-left: 45px;--bs-btn-hover-bg: rgb(241,181,162);
+    --bs-btn-hover-border-color: rgb(241,181,162)">开始</button>
         </div>
-        <div style="display: inline-block;margin-top:10px;float: right;margin-right:10px;height:150px;width:150px;background-color: cornflowerblue">
-            倒计时
-        </div>
-        <div style="display: inline-block;margin-top:10px;float: right;margin-right:10px;height:150px;width:150px;background-color: cornflowerblue">
+        <div style="display: inline-block;margin-top:10px;margin-left:10px;height:150px;width:150px;background-color: cornflowerblue">
             排行榜
         </div>
+        </div>
+
     </div>
 
 {% endblock %}
 
 {% block page-js %}
+    <script>
+        var timer = document.getElementsByClassName("time")[0];
+        var start = document.getElementById("start-btn");
+        var seconds = 10;
+
+        // 定义一个函数开始倒计时
+        function startTimer() {
+          // 每隔一秒执行一次updateTimer函数
+          interval = setInterval(updateTimer, 1000);
+
+
+        }
+
+        function updateTimer() {
+            //每隔减一秒
+            seconds = seconds-1;
+          // 将秒数转换为分和秒的格式
+          var minutes = Math.floor(seconds / 60);
+          var secondsLeft = seconds % 60;
+          // 如果秒数小于10，前面加一个0
+          if (secondsLeft < 10) {
+            secondsLeft = "0" + secondsLeft;
+          }
+          // 更新页面中的倒计时
+          timer.innerHTML = minutes + ":" + secondsLeft;
+              if(seconds === 0)
+              {
+                  clearInterval(interval);
+              }
+        }
+
+            // 给开始按钮添加点击事件监听器，调用startTimer函数
+        start.addEventListener("click", startTimer);
+
+
+    </script>
+
+
 
 {% endblock %}
