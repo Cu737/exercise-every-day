@@ -22,5 +22,6 @@ urlpatterns = [
     # 转入登录界面
     path('login/', views.login),
     path('index/', views.index),
-    path('game/',views.game)
+    path('game/',views.game),
+    path('video/',views.video)
 ]
