@@ -1,9 +1,5 @@
-import time
 
-import base64
-import cv2
-import json
-import threading
+import mediapipe as mp
 from django.shortcuts import render, redirect
 import cv2
 from django.http import StreamingHttpResponse
@@ -34,13 +30,28 @@ def game(request):
 
 
 def gen_display(camera):
+    mp_draw = mp.solutions.drawing_utils
+    mp_hands = mp.solutions.hands
+    hands = mp_hands.Hands()
     # 循环读取摄像头的画面
     while True:
         # 读取一帧图片
         ret, frame = camera.read()
         if ret:
             # 将图片进行编码
+
+            frameRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            results = hands.process(frameRGB)
+
+            if results.multi_hand_landmarks:
+                for hand_landmarks in results.multi_hand_landmarks:
+                    # 关键点可视化
+                    mp_draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+                    # 输出中指尖的坐标
+                    print(hand_landmarks.landmark[12])
+
             ret, frame = cv2.imencode('.jpeg', frame)
+
             if ret:
                 # 转换为字节类型，并存储在迭代器中
                 yield (b'--frame\r\n'
