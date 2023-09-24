@@ -5,16 +5,143 @@ import cv2
 from django.http import StreamingHttpResponse
 from django.views.decorators.clickjacking import xframe_options_exempt
 
+from django.shortcuts import render, redirect, HttpResponse
+from django import forms
+import pymysql
+from . import models
+from utils.code import check_code
+from django.shortcuts import HttpResponse
+from io import BytesIO
 
-# Create your views here.
+
+def image_code(request):
+    """ 生成图片验证码 """
+    # 调用pillow函数,生成图片
+    img, code_string = check_code()
+
+    # 写入到自己的session中,以便于后续获取验证码再进行校验
+    request.session['image_code'] = code_string
+    # 给session设置 60s 超时
+    request.session.set_expiry(60)
+
+    # 将图片保存到内存
+    stream = BytesIO()
+    img.save(stream, 'png')
+    return HttpResponse(stream.getvalue())
+
+
+# 用户登录表单
+class LoginForm(forms.Form):
+    username = forms.CharField(
+        label="用户名",
+        widget=forms.TextInput(attrs={"class": "form-control"}),
+        required=True,
+    )
+    password = forms.CharField(
+        label="密码",
+        # render_value=True 表示当提交后,如果密码输入错误,不会自动清空密码输入框的内容
+        widget=forms.PasswordInput(attrs={"class": "form-control"}, ),
+        required=True,
+    )
+    code = forms.CharField(
+        label="验证码",
+        widget=forms.TextInput(attrs={"class": "form-control"}),
+        required=True,
+    )
+
+    # def clean_password(self):
+    #     pwd = self.cleaned_data.get("password")
+    #     return md5(pwd)
+
+
+# 用户注册表单
+class SignupForm(forms.Form):
+    username = forms.CharField(
+        label="用户名",
+        widget=forms.TextInput(attrs={"class": "form-control"}),
+        required=True,
+    )
+    password = forms.CharField(
+        label="密码",
+        # render_value=True 表示当提交后,如果密码输入错误,不会自动清空密码输入框的内容
+        widget=forms.PasswordInput(attrs={"class": "form-control"}, ),
+        required=True,
+    )
+    confirmed_password = forms.CharField(
+        label="确认密码",
+        widget=forms.PasswordInput(attrs={"class": "form-control"}, ),
+        required=True,
+    )
+    # def clean_password(self):
+    #     pwd = self.cleaned_data.get("password")
+    #     return md5(pwd)
+
+
 def login(request):
-    """
-    转入登录页面
-    :param request:
-    :return:
-    """
-    return render(request, "login.html")
+    """登录"""
+    if request.method == "GET":
+        form = LoginForm()
+        return render(request, 'login.html', {"form": form})
 
+    if 'btn2' in request.POST:
+        return redirect('/signup/')
+
+    form = LoginForm(data=request.POST)
+    if form.is_valid():
+        # 验证成功, 获取到的用户名和密码
+        # print(form.cleaned_data)
+
+        # 验证码的校验
+        user_input_code = form.cleaned_data.pop('code')
+        image_code = request.session.get('image_code', "")
+        if image_code.upper() != user_input_code.upper():
+            form.add_error("code", "验证码错误")
+            return render(request, 'login.html', {"form": form})
+
+        # 去数据库校验用户名和密码是否正确
+        User_object = models.UserInfo.objects.filter(**form.cleaned_data).first()
+        # 如果数据库中没有查询到数据
+        if not User_object:
+            # 手动抛出错误显示在"password"字段下
+            form.add_error("username", "用户名或密码错误")
+            return render(request, 'login.html', {"form": form})
+
+        # 如果用户名密码正确
+        # 网站生成随机字符创,写到用户浏览器的cookie中,再写入到服务器的session中
+        request.session["info"] = {'username': User_object.username}
+        # 重新设置session的超时时间,因为之前设置的session的超时时间的 60s
+        request.session.set_expiry(60 * 60 * 24)
+        return redirect("/index/")
+    return redirect('/login')
+
+
+def signup(request):
+    """注册"""
+    if request.method == "GET":
+        form = SignupForm()
+        return render(request, 'signup.html', {"form": form})
+
+    form = SignupForm(data=request.POST)
+    if form.is_valid():
+        # 检查确认密码是否和密码输入一致
+        if form.cleaned_data['password'] == form.cleaned_data['confirmed_password']:
+            # 1.连接Mysql
+            conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='123456', charset='utf8',
+                                   db='users')
+            cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+
+            # 2.发送指令
+            cursor.execute("insert into app01_userinfo(username, password) values(%s, %s);",
+                           (form.cleaned_data['username'], form.cleaned_data['password']))
+            conn.commit()
+
+            # 3.关闭
+            cursor.close()
+            conn.close()
+            return redirect('/login/')
+        form.add_error("confirmed_password", "密码不一致")
+        return render(request, 'signup.html', {"form": form})
+    return redirect('/signup/')
 
 def index(request):
     """
@@ -27,6 +154,15 @@ def index(request):
 
 def game(request):
     return render(request, "game.html")
+
+
+def logout(request):
+    """ 退出登录 """
+
+    # 清楚当前session
+    request.session.clear()
+
+    return redirect("/login/")
 
 
 def gen_display(camera):
