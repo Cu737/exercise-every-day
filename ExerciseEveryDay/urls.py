@@ -20,7 +20,8 @@ from app01 import views
 
 urlpatterns = [
     # 转入登录界面
-    path('login/', views.login),
+    path('login/', views.login, name='login'),
+    path('register/', views.login, name='register'),
     path('index/', views.index),
     path('game/',views.game),
     path('video/',views.video)
