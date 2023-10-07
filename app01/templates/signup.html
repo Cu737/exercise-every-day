@@ -13,7 +13,7 @@
 
 {% block content %}
     <div class="login_panel">
-        <h1 style="text-align: center">欢迎注册</h1>
+        <h1 class="main_text">欢迎注册</h1>
 
         <form method="post" novalidate>
             {% csrf_token %}
@@ -30,12 +30,13 @@
                 {{ form.confirmed_password }}
                 <span style="color: red;">{{ form.errors.confirmed_password.0 }}</span>
             </div>
+            <div style="text-align: center;">
+                <a style="text-decoration: none;" href="{% url 'login' %}">已有账号，点击登录</a>
+            </div>
             <button class="btn btn-primary"
                     style="margin: 30px 50px 40px 50px;">
                 注册
             </button>
-
-
         </form>
     </div>
 {% endblock %}

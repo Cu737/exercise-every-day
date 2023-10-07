@@ -20,7 +20,7 @@
 
 {% block content %}
     <div class="login_panel">
-        <h1 style="text-align: center">登录</h1>
+        <h1 class="main_text">登录</h1>
         <form method="post" novalidate>
             {% csrf_token %}
             <div class="mb-3">
@@ -33,29 +33,25 @@
                 {{ form.password }}
                 <span style="color: red;">{{ form.errors.username.0 }}</span>
             </div>
-
-            <div class="mb-3">
-                <label for="id_code" class="form-label">图片验证码</label>
-                {{ form.code }}
-                <span style="color: red;">{{ form.errors.code.0 }}</span>
+            <div class="clearfix">
+                <div class="mb-3">
+                    <label for="id_code" class="form-label">图片验证码</label>
+                        {{ form.code }}
+                    <span style="color: red;">{{ form.errors.code.0 }}</span>
+                </div>
+                <img class="mb-3" src="/image/code/" alt="" id="image_code" onclick="this.setAttribute('src','/image/code/?random='+Math.random())">
             </div>
-            <div>
-                <img src="/image/code/" alt="" id="image_code"
-                     onclick="this.setAttribute('src','/image/code/?random='+Math.random())">
-
+            <div style="text-align: center;">
+                <a style="text-decoration: none;" href="{% url 'signup' %}">没有账号？注册一个</a>
             </div>
-
             <div>
                 <button type="submit" class="btn btn-primary" name="btn1" id="btn1"
-                        style="margin: 150px 0px 40px 200px; ">
+                        style="float: left; margin-left: 50px;">
                     登录
-                </button>
-                <button type="submit" class="btn btn-primary" name="btn2" id="btn2"
-                        style="margin: 150px 50px 40px 50px;">
-                    注册
                 </button>
             </div>
         </form>
+
     </div>
 {% endblock %}
 
