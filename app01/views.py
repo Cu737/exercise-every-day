@@ -12,6 +12,7 @@ from . import models
 from utils.code import check_code
 from django.shortcuts import HttpResponse
 from io import BytesIO
+from app01.models import UserInfo
 
 
 def image_code(request):
@@ -125,19 +126,8 @@ def signup(request):
     if form.is_valid():
         # 检查确认密码是否和密码输入一致
         if form.cleaned_data['password'] == form.cleaned_data['confirmed_password']:
-            # 1.连接Mysql
-            conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='123456', charset='utf8',
-                                   db='users')
-            cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-
-            # 2.发送指令
-            cursor.execute("insert into app01_userinfo(username, password) values(%s, %s);",
-                           (form.cleaned_data['username'], form.cleaned_data['password']))
-            conn.commit()
-
-            # 3.关闭
-            cursor.close()
-            conn.close()
+            user_info = UserInfo(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+            user_info.save()
             return redirect('/login/')
         form.add_error("confirmed_password", "密码不一致")
         return render(request, 'signup.html', {"form": form})
