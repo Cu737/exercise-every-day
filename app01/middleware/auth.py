@@ -10,6 +10,9 @@ class AuthMiddleware(MiddlewareMixin):
         if request.path_info in ["/login/", "/image/code/","/signup/"]:
             return
 
+        if request.path_info == '/':
+            return redirect('login/')
+
         # 1.读取当前访问的用户的session信息,如果能读到,说明已登录过,就可以继续向后走
         info_dict = request.session.get("info")
         if info_dict:
