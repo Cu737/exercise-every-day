@@ -3,9 +3,9 @@ LANGUAGE_CODE = "zh-hans"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'users',
+        'NAME': 'db1',
         'USER': 'root',
-        'PASSWORD': '123456',
+        'PASSWORD': 'asdqaz123',
         'HOST': '127.0.0.1',
         'PORT': 3306
     }
