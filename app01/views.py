@@ -158,7 +158,7 @@ def logout(request):
 def gen_display(camera):
     mp_draw = mp.solutions.drawing_utils
     mp_hands = mp.solutions.hands
-    hands = mp_hands.Hands()
+    hands = mp_hands.Hands(max_num_hands=2)
     # 循环读取摄像头的画面
     while True:
         # 读取一帧图片
@@ -170,11 +170,21 @@ def gen_display(camera):
             results = hands.process(frameRGB)
 
             if results.multi_hand_landmarks:
+
                 for hand_landmarks in results.multi_hand_landmarks:
+                    handedness = results.multi_handedness[0]
+                    print(handedness.classification[0].label)
                     # 关键点可视化
                     mp_draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
-                    # 输出中指尖的坐标
-                    print(hand_landmarks.landmark[12])
+                    if handedness.classification[0].label == 'Left':
+
+
+                        # 输出中指尖的坐标
+                        print("左")
+                        print(hand_landmarks.landmark[12])
+                    else:
+                        print("右")
+                        print(hand_landmarks.landmark[12])
 
             ret, frame = cv2.imencode('.jpeg', frame)
 
