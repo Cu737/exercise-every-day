@@ -4,27 +4,223 @@
 {% block page-css %}
     <title>天天运动</title>
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'css/game.css' %}">
+    <style>
+        .fruit{
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 100px;
+            height: 100px;
+            {#background-image: url('your-image-url');#}
+            background-size: cover;
+            background-color: transparent;
+        }
+        .draw{
+            position: absolute;
+            width: 650px;
+            height: 500px;
+            top: 50px;
+            left: 10px;
+            background-color: transparent;
+        }
+
+    </style>
 {% endblock %}
 
 {% block page-main %}
     {#    该盒子数量应该随着可支持运动数量灵活变通。#}
-    <div style="width: 800px;height:600px;background-color: white;margin-top: 50px;margin-left: 50px;border-radius: 15px">
-        <div style="display:inline-block;float:left;margin-left: 10px;margin-top: 50px;width:600px;height:500px;">
-            <iframe src="http://127.0.0.1:8000/video" width="800" height="500"></iframe>
+
+    <div class = "content" style="position:relative;width: 850px;height:600px;background-color: white;margin-top: 50px;margin-left: 50px;border-radius: 15px;background-color: rgba(255, 255, 255, 0.75);">
+        <div style="display:inline-block;float:left;margin-left: 10px;margin-top: 50px;width:650px;height:500px;">
+            <iframe src="http://127.0.0.1:8000/video" width="650" height="500"></iframe>
         </div>
-        <div style="display: inline-block;margin-top:50px;margin-right:10px;float: right;height:150px;width:150px;background-color: cornflowerblue">
+        <div class = "draw">
+        </div>
+        <div  class = "fruit" id="fruit0" >
+            <img src = "{% static 'image/1fruit.png' %}" style = "width:100px;height:100px;">
+        </div>
+        <div  class = "fruit" id="fruit1" >
+            <img src = "{% static 'image/2fruit.png' %}" style = "width:100px;height:100px;">
+        </div>
+        <div  class = "fruit" id="fruit2" >
+            <img src = "{% static 'image/3fruit.png' %}" style = "width:100px;height:100px;">
+        </div>
+        <div  class = "fruit" id="fruit3" >
+            <img src = "{% static 'image/4fruit.png' %}" style = "width:100px;height:100px;">
+        </div>
+        <div>
+            <div style="display: inline-block;margin-top:50px;margin-left:10px;height:150px;width:150px;background-color: cornflowerblue">
             得分
+            </div>
+        <div style="display: inline-block;margin-top:10px;margin-left:10px;height:150px;width:150px;background-color: transparent">
+            <div class = "time" style="margin-top:30px;margin-left: 37px;">3:00</div>
+            <button type="submit" id = "start-btn" class="btn btn-primary" style="margin-top:12px;margin-left: 45px;--bs-btn-hover-bg: rgb(241,181,162);
+    --bs-btn-hover-border-color: rgb(241,181,162)">开始</button>
         </div>
-        <div style="display: inline-block;margin-top:10px;float: right;margin-right:10px;height:150px;width:150px;background-color: cornflowerblue">
-            倒计时
-        </div>
-        <div style="display: inline-block;margin-top:10px;float: right;margin-right:10px;height:150px;width:150px;background-color: cornflowerblue">
+        <div style="display: inline-block;margin-top:10px;margin-left:10px;height:150px;width:150px;background-color: cornflowerblue">
             排行榜
         </div>
+            <button id = "start" onclick="">
+             开始
+            </button>
+        </div>
+
     </div>
 
 {% endblock %}
 
 {% block page-js %}
+    <script>
+        var timer = document.getElementsByClassName("time")[0];
+        var start = document.getElementById("start-btn");
+        var seconds = 10;
+        // 定义一个函数开始倒计时
+        function startTimer() {
+          // 每隔一秒执行一次updateTimer函数
+          interval = setInterval(updateTimer, 1000);
 
+
+        }
+
+        function updateTimer() {
+            //每隔减一秒
+            seconds = seconds-1;
+          // 将秒数转换为分和秒的格式
+          var minutes = Math.floor(seconds / 60);
+          var secondsLeft = seconds % 60;
+          // 如果秒数小于10，前面加一个0
+          if (secondsLeft < 10) {
+            secondsLeft = "0" + secondsLeft;
+          }
+          // 更新页面中的倒计时
+          timer.innerHTML = minutes + ":" + secondsLeft;
+              if(seconds === 0)
+              {
+                  clearInterval(interval);
+              }
+        }
+
+        function myFunction() {
+            var numBoxes = Math.floor(Math.random() * 4);
+            for (var i = 0; i < numBoxes; i++) {
+                var fruit_name = "fruit"+i;
+                var box = document.getElementById(fruit_name);
+                console.log(box)
+                box.style.display = "block"
+            }
+        }
+            // 给开始按钮添加点击事件监听器，调用startTimer函数
+        start.addEventListener("click", startTimer);
+        function startgame()
+        {
+            {#var start_button = document.getElementById("start");#}
+            {#start_button.#}
+        }
+// 设置myFunction每30秒执行一次
+        {#setInterval(myFunction, 5200);#}
+        var box0 = document.getElementById('fruit0');
+        var box1 = document.getElementById('fruit1');
+        var box2 = document.getElementById('fruit2');
+        var box3 = document.getElementById('fruit3');
+        var time = 1;
+        var velocityX = 1.5; // horizontal velocity
+        var v_rule = -13.5
+        var velocityY = v_rule; // vertical velocity
+        var velocityY1 = v_rule;
+        var velocityY2 = v_rule;
+        var velocityY3 = v_rule;
+        var positionX1 = 0; // horizontal position
+        var positionY1 = 500; // vertical position
+        var positionX2 = 100; // horizontal position
+        var positionY2 = 500; // vertical position
+        var positionX3 = 200; // horizontal position
+        var positionY3 = 500; // vertical position
+        var positionX4 = 300; // horizontal position
+        var positionY4 = 500; // vertical position
+        var gravity = 0.2; // gravity
+        var timeInterval = 20; // time interval in milliseconds
+        setInterval(function() {
+            time += 1;
+            velocityY += gravity; // v = u + at
+            velocityY1 += gravity;
+            velocityY2 += gravity;
+            velocityY3 += gravity;
+            positionX1 += velocityX; // s = ut
+            positionY1 += velocityY; // s = ut + 1/2at^2
+            positionX2 += velocityX; // s = ut
+            positionY2 += velocityY1; // s = ut + 1/2at^
+            positionX3 += velocityX; // s = ut
+            positionY3 += velocityY2; // s = ut + 1/2at^2
+            positionX4 += velocityX; // s = ut
+            positionY4 += velocityY3; // s = ut + 1/2at^2
+            box0.style.left = positionX1 + 'px';
+            box0.style.top = positionY1 + 'px';
+            box1.style.left = positionX2 + 'px';
+            box1.style.top = positionY2 + 'px';
+            box2.style.left = positionX3 + 'px';
+            box2.style.top = positionY3 + 'px';
+            box3.style.left = positionX4 + 'px';
+            box3.style.top = positionY4 + 'px';
+            // Check if the box has hit the bottom of the window
+            if (positionY1 + box0.offsetHeight >= 600) {
+                box0.style.display = 'none'; // hide the box
+                box0.style.left = "0px";
+                box0.style.top = "500px";
+                time = 0;
+                positionX1 = 0; // horizontal position
+                positionY1 = 500; // vertical position
+                velocityY = v_rule;
+                var numBoxes = Math.floor(Math.random() * 4);
+                console.log(numBoxes);
+                if(numBoxes%2 === 0)
+                {
+                    box0.style.display = 'block';
+                }
+            }
+            if (positionY2 + box1.offsetHeight >= 600) {
+                box1.style.display = 'none'; // hide the box
+                box1.style.left = "100px";
+                box1.style.top = "500px"
+                positionX2 = 100; // horizontal position
+                positionY2 = 500; // vertical position
+                velocityY1 = v_rule;
+                var numBoxes = Math.floor(Math.random() * 4);
+                console.log(numBoxes);
+                if(numBoxes%2 === 0)
+                {
+                    box1.style.display = 'block';
+                }
+            }
+            if (positionY3 + box2.offsetHeight >= 600) {
+                box2.style.display = 'none'; // hide the box
+                box2.style.left = "200px";
+                box2.style.top = "500px"
+                positionX3 = 200; // horizontal position
+                positionY3 = 500; // vertical position
+                velocityY2 = v_rule;
+                var numBoxes = Math.floor(Math.random() * 4);
+                console.log(numBoxes);
+                if(numBoxes%2 === 0)
+                {
+                    box2.style.display = 'block';
+                }
+            }
+            if (positionY4 + box3.offsetHeight >= 600) {
+                box3.style.display = 'none'; // hide the box
+                box3.style.left = "300px";
+                box3.style.top = "500px"
+                positionX4 = 300; // horizontal position
+                positionY4 = 500
+                velocityY3 = v_rule;
+                var numBoxes = Math.floor(Math.random() * 4);
+                console.log(numBoxes);
+                if(numBoxes%2 === 0)
+                {
+                    box3.style.display = 'block';
+                }
+            }
+        }, timeInterval);
+
+    </script>
 {% endblock %}
