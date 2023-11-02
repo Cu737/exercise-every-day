@@ -1,0 +1,38 @@
+.login_panel
+{
+    margin-right: 530px;
+    margin-left: 530px;
+    margin-top: 120px;
+    background-color: rgba(255, 255, 255, 0.75);
+    border-radius: 20px / 20px;
+    width: 400px;
+    height: 500px;
+}
+
+.mb-3
+{
+    margin-left: 50px;
+    margin-right: 50px;
+    color: rgb(216, 160, 140);
+}
+
+
+.main_text
+{
+    display: block;
+    padding-top: 40px;
+    color: rgb(216, 160, 140);
+    text-align: center;
+}
+
+.btn
+{
+    background-color: rgb(234, 191, 176);
+    border-color: transparent;
+
+}
+
+
+
+
+

@@ -1,0 +1,20 @@
+.btn
+{
+    background-color: rgb(234, 191, 176);
+    border-color: transparent;
+}
+
+
+
+.time
+{
+    color: rgb(234, 191, 176);
+    font-size: 34px;
+    font-weight: bolder;
+}
+
+
+.content
+{
+    grid-template-columns: 600px 200px;
+}

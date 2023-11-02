@@ -26,11 +26,6 @@
         }
 
     </style>
-{% endblock %}
-
-{% block page-main %}
-    {#    该盒子数量应该随着可支持运动数量灵活变通。#}
-
     <div class = "content" style="position:relative;width: 850px;height:600px;background-color: white;margin-top: 50px;margin-left: 50px;border-radius: 15px;background-color: rgba(255, 255, 255, 0.75);">
         <div style="display:inline-block;float:left;margin-left: 10px;margin-top: 50px;width:650px;height:500px;">
             <iframe src="http://127.0.0.1:8000/video" width="650" height="500"></iframe>
@@ -75,12 +70,10 @@
         var timer = document.getElementsByClassName("time")[0];
         var start = document.getElementById("start-btn");
         var seconds = 10;
-        // 定义一个函数开始倒计时
+      // 定义一个函数开始倒计时
         function startTimer() {
           // 每隔一秒执行一次updateTimer函数
           interval = setInterval(updateTimer, 1000);
-
-
         }
 
         function updateTimer() {
@@ -101,6 +94,8 @@
               }
         }
 
+            // 给开始按钮添加点击事件监听器，调用startTimer函数
+        start.addEventListener("click", startTimer);
         function myFunction() {
             var numBoxes = Math.floor(Math.random() * 4);
             for (var i = 0; i < numBoxes; i++) {
@@ -117,7 +112,6 @@
             {#var start_button = document.getElementById("start");#}
             {#start_button.#}
         }
-// 设置myFunction每30秒执行一次
         {#setInterval(myFunction, 5200);#}
         var box0 = document.getElementById('fruit0');
         var box1 = document.getElementById('fruit1');
