@@ -80,41 +80,40 @@ class SignupForm(forms.Form):
 
 def login(request):
     """登录"""
-    return render(request, "game.html")
-    # if request.method == "GET":
-    #     form = LoginForm()
-    #     return render(request, 'login.html', {"form": form})
-    #
-    # if 'btn2' in request.POST:
-    #     return redirect('/signup/')
-    #
-    # form = LoginForm(data=request.POST)
-    # if form.is_valid():
-    #     # 验证成功, 获取到的用户名和密码
-    #     # print(form.cleaned_data)
-    #
-    #     # 验证码的校验
-    #     user_input_code = form.cleaned_data.pop('code')
-    #     image_code = request.session.get('image_code', "")
-    #     if image_code.upper() != user_input_code.upper():
-    #         form.add_error("code", "验证码错误")
-    #         return render(request, 'login.html', {"form": form})
-    #
-    #     # 去数据库校验用户名和密码是否正确
-    #     User_object = models.UserInfo.objects.filter(**form.cleaned_data).first()
-    #     # 如果数据库中没有查询到数据
-    #     if not User_object:
-    #         # 手动抛出错误显示在"password"字段下
-    #         form.add_error("username", "用户名或密码错误")
-    #         return render(request, 'login.html', {"form": form})
-    #
-    #     # 如果用户名密码正确
-    #     # 网站生成随机字符创,写到用户浏览器的cookie中,再写入到服务器的session中
-    #     request.session["info"] = {'username': User_object.username}
-    #     # 重新设置session的超时时间,因为之前设置的session的超时时间的 60s
-    #     request.session.set_expiry(60 * 60 * 24)
-    #     return redirect("/index/")
-    # return redirect('/login')
+    if request.method == "GET":
+        form = LoginForm()
+        return render(request, 'login.html', {"form": form})
+
+    if 'btn2' in request.POST:
+        return redirect('/signup/')
+
+    form = LoginForm(data=request.POST)
+    if form.is_valid():
+        # 验证成功, 获取到的用户名和密码
+        # print(form.cleaned_data)
+
+        # 验证码的校验
+        user_input_code = form.cleaned_data.pop('code')
+        image_code = request.session.get('image_code', "")
+        if image_code.upper() != user_input_code.upper():
+            form.add_error("code", "验证码错误")
+            return render(request, 'login.html', {"form": form})
+
+        # 去数据库校验用户名和密码是否正确
+        User_object = models.UserInfo.objects.filter(**form.cleaned_data).first()
+        # 如果数据库中没有查询到数据
+        if not User_object:
+            # 手动抛出错误显示在"password"字段下
+            form.add_error("username", "用户名或密码错误")
+            return render(request, 'login.html', {"form": form})
+
+        # 如果用户名密码正确
+        # 网站生成随机字符创,写到用户浏览器的cookie中,再写入到服务器的session中
+        request.session["info"] = {'username': User_object.username}
+        # 重新设置session的超时时间,因为之前设置的session的超时时间的 60s
+        request.session.set_expiry(60 * 60 * 24)
+        return redirect("/index/")
+    return redirect('/login')
 
 
 def signup(request):
