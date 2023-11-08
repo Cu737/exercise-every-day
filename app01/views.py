@@ -34,19 +34,19 @@ def image_code(request):
 # 用户登录表单
 class LoginForm(forms.Form):
     username = forms.CharField(
-        label="用户名",
-        widget=forms.TextInput(attrs={"class": "form-control"}),
+        # label="用户名",
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder":"请输入用户名"}),
         required=True,
     )
     password = forms.CharField(
-        label="密码",
+        # label="密码",
         # render_value=True 表示当提交后,如果密码输入错误,不会自动清空密码输入框的内容
-        widget=forms.PasswordInput(attrs={"class": "form-control"}, ),
+        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder":"请输入密码"}, ),
         required=True,
     )
     code = forms.CharField(
-        label="验证码",
-        widget=forms.TextInput(attrs={"class": "form-control"}),
+        # label="验证码",
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder":"请输入验证码"}),
         required=True,
     )
 
@@ -59,18 +59,18 @@ class LoginForm(forms.Form):
 class SignupForm(forms.Form):
     username = forms.CharField(
         label="用户名",
-        widget=forms.TextInput(attrs={"class": "form-control"}),
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder":"请输入用户名"}),
         required=True,
     )
     password = forms.CharField(
         label="密码",
         # render_value=True 表示当提交后,如果密码输入错误,不会自动清空密码输入框的内容
-        widget=forms.PasswordInput(attrs={"class": "form-control"}, ),
+        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder":"请输入密码"}, ),
         required=True,
     )
     confirmed_password = forms.CharField(
         label="确认密码",
-        widget=forms.PasswordInput(attrs={"class": "form-control"}, ),
+        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder":"确认密码"}, ),
         required=True,
     )
     # def clean_password(self):

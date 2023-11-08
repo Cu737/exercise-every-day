@@ -37,20 +37,20 @@
                         <span style="color: red;">{{ form.errors.username.0 }}</span>
                     </div>
                     <div class="clearfix">
-                        <div class="mb-3">
+                        <div class="mb-3" style="padding-left: 0;">
                             <label for="id_code" class="form-label">图片验证码</label>
                             {{ form.code }}
                             <span style="color: red;">{{ form.errors.code.0 }}</span>
                         </div>
-                        <img class="mb-3" src="/image/code/" alt="" id="image_code"
+                        <img class="mb-3"  src="/image/code/" alt="" id="image_code"
                              onclick="this.setAttribute('src','/image/code/?random='+Math.random())">
                     </div>
                     <div style="text-align: center;">
                         <a style="text-decoration: none;" href="{% url 'signup' %}">没有账号？注册一个</a>
                     </div>
                     <div>
-                        <button type="submit" class="btn btn-primary" style="text-align: right">
-                            登录
+                        <button type="submit" class="button" style="margin-left: 145px">
+                            <span>登录</span>
                         </button>
                     </div>
                 </form>
