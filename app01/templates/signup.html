@@ -5,39 +5,57 @@
     <meta charset="UTF-8">
     <title>注册</title>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
 
-
 </head>
-<body style="background-image: linear-gradient(to right, #f4ecc3, rgb(234, 191, 176));">
+<body>
 
 {% block content %}
-    <div class="login_panel">
-        <h1 class="main_text">欢迎注册</h1>
 
-        <form method="post" novalidate>
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">用户名</label>
-                {{ form.username }}
+    <div class="box">
+        <div class="content">
+            <div class="login-wrapper">
+                <h1>注册</h1>
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">用户名</label>
+                        {{ form.username }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">密码</label>
+                        {{ form.password }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">确认密码</label>
+                        {{ form.confirmed_password }}
+                        <span style="color: red;">{{ form.errors.confirmed_password.0 }}</span>
+                    </div>
+                    <div style="text-align: center;">
+                        <a style="text-decoration: none;" href="{% url 'login' %}">已有账号，点击登录</a>
+                    </div>
+                    <button class="btn btn-primary"
+                            style="margin: 0px 0px 0px 0px;">
+                        注册
+                    </button>
+                </form>
+                <div class="divider">
+                    <span class="line"></span>
+                    <span class="divider-text">其他方式登录</span>
+                    <span class="line"></span>
+                </div>
+                <div class="other-login-wrapper">
+                    <div class="other-login-item">
+                        <img src="../static/image/asset/QQ.png" alt="">
+                    </div>
+                    <div class="other-login-item">
+                        <img src="../static/image/asset/WeChat.png" alt="">
+                    </div>
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label">密码</label>
-                {{ form.password }}
-            </div>
-            <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label">确认密码</label>
-                {{ form.confirmed_password }}
-                <span style="color: red;">{{ form.errors.confirmed_password.0 }}</span>
-            </div>
-            <div style="text-align: center;">
-                <a style="text-decoration: none;" href="{% url 'login' %}">已有账号，点击登录</a>
-            </div>
-            <button class="btn btn-primary"
-                    style="margin: 30px 50px 40px 50px;">
-                注册
-            </button>
-        </form>
+        </div>
     </div>
 {% endblock %}
 
