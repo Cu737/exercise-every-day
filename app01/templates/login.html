@@ -34,16 +34,16 @@
                     <div class="mb-3">
                         <label for="exampleInputPassword1" class="form-label">密码</label>
                         {{ form.password }}
-                        <span style="color: red;">{{ form.errors.username.0 }}</span>
+                        <span class="error-msg">{{ form.errors.username.0 }}</span>
                     </div>
-                    <div class="clearfix">
-                        <div class="mb-3" style="padding-left: 0;">
-                            <label for="id_code" class="form-label">图片验证码</label>
+                    <div class="mb-3">
+                        <label for="id_code" class="form-label">图片验证码</label>
+                        <div style="display: flex; align-items: center;">
                             {{ form.code }}
-                            <span style="color: red;">{{ form.errors.code.0 }}</span>
+                            <img src="/image/code/" alt="" id="image_code" style="margin-left: 20px;   width: 200px; border: 2px solid black; border-radius: 4px;"
+                                 onclick="this.setAttribute('src','/image/code/?random='+Math.random())">
                         </div>
-                        <img class="mb-3"  src="/image/code/" alt="" id="image_code"
-                             onclick="this.setAttribute('src','/image/code/?random='+Math.random())">
+                        <span class="error-msg">{{ form.errors.code.0 }}</span>
                     </div>
                     <div style="text-align: center;">
                         <a style="text-decoration: none;" href="{% url 'signup' %}">没有账号？注册一个</a>

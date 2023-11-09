@@ -9,6 +9,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
 
+    <style>
+        .error-msg {
+            color: red;
+            position: absolute;
+            font-size: 13px;
+        }
+
+    </style>
+
 </head>
 <body>
 
@@ -23,6 +32,7 @@
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">用户名</label>
                         {{ form.username }}
+                        <span class="error-msg">{{ form.errors.username.0 }}</span>
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputPassword1" class="form-label">密码</label>
