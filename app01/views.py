@@ -124,6 +124,12 @@ def signup(request):
 
     form = SignupForm(data=request.POST)
     if form.is_valid():
+        # 检查用户名是否已经注册过
+        existing_user = models.UserInfo.objects.filter(username=form.cleaned_data['username']).exists()
+        if existing_user:
+            form.add_error("username", "该用户名已经被注册")
+            return render(request, 'signup.html', {"form": form})
+
         # 检查确认密码是否和密码输入一致
         if form.cleaned_data['password'] == form.cleaned_data['confirmed_password']:
             user_info = UserInfo(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
