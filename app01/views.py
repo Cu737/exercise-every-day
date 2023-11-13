@@ -33,19 +33,19 @@ def image_code(request):
 # 用户登录表单
 class LoginForm(forms.Form):
     username = forms.CharField(
-        label="用户名",
-        widget=forms.TextInput(attrs={"class": "form-control"}),
+        # label="用户名",
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder":"请输入用户名"}),
         required=True,
     )
     password = forms.CharField(
-        label="密码",
+        # label="密码",
         # render_value=True 表示当提交后,如果密码输入错误,不会自动清空密码输入框的内容
-        widget=forms.PasswordInput(attrs={"class": "form-control"}, ),
+        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder":"请输入密码"}, ),
         required=True,
     )
     code = forms.CharField(
-        label="验证码",
-        widget=forms.TextInput(attrs={"class": "form-control"}),
+        # label="验证码",
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder":"请输入验证码"}),
         required=True,
     )
 
@@ -58,18 +58,18 @@ class LoginForm(forms.Form):
 class SignupForm(forms.Form):
     username = forms.CharField(
         label="用户名",
-        widget=forms.TextInput(attrs={"class": "form-control"}),
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder":"请输入用户名"}),
         required=True,
     )
     password = forms.CharField(
         label="密码",
         # render_value=True 表示当提交后,如果密码输入错误,不会自动清空密码输入框的内容
-        widget=forms.PasswordInput(attrs={"class": "form-control"}, ),
+        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder":"请输入密码"}, ),
         required=True,
     )
     confirmed_password = forms.CharField(
         label="确认密码",
-        widget=forms.PasswordInput(attrs={"class": "form-control"}, ),
+        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder":"确认密码"}, ),
         required=True,
     )
     # def clean_password(self):
@@ -123,6 +123,12 @@ def signup(request):
 
     form = SignupForm(data=request.POST)
     if form.is_valid():
+        # 检查用户名是否已经注册过
+        existing_user = models.UserInfo.objects.filter(username=form.cleaned_data['username']).exists()
+        if existing_user:
+            form.add_error("username", "该用户名已经被注册")
+            return render(request, 'signup.html', {"form": form})
+
         # 检查确认密码是否和密码输入一致
         if form.cleaned_data['password'] == form.cleaned_data['confirmed_password']:
             user_info = UserInfo(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
