@@ -72,6 +72,12 @@
         var timer = document.getElementsByClassName("time")[0];
         var start = document.getElementById("start-btn");
         var seconds = 10;
+        $.ajaxSetup({
+
+ 　　　　data: {csrfmiddlewaretoken: '{{ csrf_token }}'}
+
+ 　　})
+
       // 定义一个函数开始倒计时
         function startTimer() {
           // 每隔一秒执行一次updateTimer函数
@@ -103,7 +109,7 @@
             for (var i = 0; i < numBoxes; i++) {
                 var fruit_name = "fruit"+i;
                 var box = document.getElementById(fruit_name);
-                console.log(box)
+                //console.log(box)
                 box.style.display = "block"
             }
         }
@@ -115,6 +121,20 @@
             {#start_button.#}
         }
         {#setInterval(myFunction, 5200);#}
+        setInterval(function ()
+        {
+            $.ajax({
+                url: '/game/',
+                type: 'post',
+                success: function (data) {
+                    console.log(data)
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+            })
+        },500)
+
         var box0 = document.getElementById('fruit0');
         var box1 = document.getElementById('fruit1');
         var box2 = document.getElementById('fruit2');
@@ -168,7 +188,7 @@
                 positionY1 = 500; // vertical position
                 velocityY = v_rule;
                 var numBoxes = Math.floor(Math.random() * 4);
-                console.log(numBoxes);
+                //console.log(numBoxes);
                 if(numBoxes%2 === 0)
                 {
                     box0.style.display = 'block';
@@ -182,7 +202,7 @@
                 positionY2 = 500; // vertical position
                 velocityY1 = v_rule;
                 var numBoxes = Math.floor(Math.random() * 4);
-                console.log(numBoxes);
+                //console.log(numBoxes);
                 if(numBoxes%2 === 0)
                 {
                     box1.style.display = 'block';
@@ -196,7 +216,7 @@
                 positionY3 = 500; // vertical position
                 velocityY2 = v_rule;
                 var numBoxes = Math.floor(Math.random() * 4);
-                console.log(numBoxes);
+                //console.log(numBoxes);
                 if(numBoxes%2 === 0)
                 {
                     box2.style.display = 'block';
@@ -210,13 +230,16 @@
                 positionY4 = 500
                 velocityY3 = v_rule;
                 var numBoxes = Math.floor(Math.random() * 4);
-                console.log(numBoxes);
+                //console.log(numBoxes);
                 if(numBoxes%2 === 0)
                 {
                     box3.style.display = 'block';
                 }
             }
         }, timeInterval);
+
+
+
 
     </script>
 {% endblock %}
