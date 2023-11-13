@@ -1,4 +1,3 @@
-
 import mediapipe as mp
 from django.shortcuts import render, redirect
 import cv2
@@ -133,6 +132,7 @@ def signup(request):
         return render(request, 'signup.html', {"form": form})
     return redirect('/signup/')
 
+
 def index(request):
     """
     转入主页
@@ -163,6 +163,7 @@ def gen_display(camera):
     while True:
         # 读取一帧图片
         ret, frame = camera.read()
+        frame = cv2.flip(frame, 1)
         if ret:
             # 将图片进行编码
 
@@ -177,7 +178,6 @@ def gen_display(camera):
                     # 关键点可视化
                     mp_draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
                     if handedness.classification[0].label == 'Left':
-
 
                         # 输出中指尖的坐标
                         print("左")
