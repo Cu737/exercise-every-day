@@ -35,7 +35,11 @@
         <div style="display:inline-block;float:left;margin-left: 10px;margin-top: 50px;width:650px;height:500px;">
             <iframe src="http://127.0.0.1:8000/video" width="650" height="500"></iframe>
         </div>
+
         <div class = "draw">
+        </div>
+          <div class = "draw" >
+              <canvas id="myCanvas" width="650" height="500"></canvas>
         </div>
         <div  class = "fruit" id="fruit0" >
             <img src = "{% static 'image/1fruit.png' %}" style = "width:100px;height:100px;">
@@ -72,6 +76,8 @@
         var timer = document.getElementsByClassName("time")[0];
         var start = document.getElementById("start-btn");
         var seconds = 10;
+
+        let c = document.getElementById("myCanvas");
         $.ajaxSetup({
 
  　　　　data: {csrfmiddlewaretoken: '{{ csrf_token }}'}
@@ -127,13 +133,70 @@
                 url: '/game/',
                 type: 'post',
                 success: function (data) {
-                    console.log(data)
+
+                    // 获取绘图上下文
+                    let ctx = c.getContext("2d");
+                    ctx.lineWidth = 15;
+
+
+                    if(typeof data !== "string")
+                    {
+                        if (data["list"][0].hasOwnProperty("left_x"))
+                        {
+                            ctx.clearRect(0, 0, c.width, c.height);
+                            let p1_x;
+                            let p1_y;
+                            let p2_x;
+                            let p2_y;
+                            for(let i = 0 ; i < 15; i++)
+                            {
+
+                                p1_x = data["list"][i]["left_x"]
+                                p1_y = data["list"][i]["left_y"]
+                                p2_x = data["list"][i+1]["left_x"]
+                                p2_y = data["list"][i+1]["left_y"]
+                                ctx.beginPath(); // 开始一条新的路径
+                                ctx.moveTo(p1_x, p1_y); // 定义线条的起点
+                                ctx.lineTo(p2_x, p2_y); // 定义线条的终点
+                                ctx.stroke(); // 绘制线条
+                            }
+                        }
+                        else if (data["list"][0].hasOwnProperty("right_x"))
+                        {
+                            ctx.clearRect(0, 0, c.width, c.height);
+                            let p1_x;
+                            let p1_y;
+                            let p2_x;
+                            let p2_y;
+                            for(let i = 0 ; i < 15; i++)
+                            {
+                                p1_x = data["list"][i]["right_x"]
+                                p1_y = data["list"][i]["right_y"]
+                                p2_x = data["list"][i+1]["right_x"]
+                                p2_y = data["list"][i+1]["right_y"]
+                                ctx.beginPath(); // 开始一条新的路径
+                                ctx.moveTo(p1_x, p1_y); // 定义线条的起点
+                                ctx.lineTo(p2_x, p2_y); // 定义线条的终点
+                                ctx.stroke(); // 绘制线条
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        ctx.clearRect(0, 0, c.width, c.height);
+                    }
+
+
+
+
+
                 },
                 error: function (error) {
                     console.log(error)
                 }
             })
-        },500)
+        },50)
 
         var box0 = document.getElementById('fruit0');
         var box1 = document.getElementById('fruit1');
