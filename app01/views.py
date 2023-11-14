@@ -14,9 +14,9 @@ from io import BytesIO
 from app01.models import UserInfo
 from collections import deque
 
-q_left = deque(maxlen=5)
+q_left = deque(maxlen=15)
 left_flag = 0
-q_right = deque(maxlen=5)
+q_right = deque(maxlen=15)
 right_flag = 0
 
 
@@ -161,11 +161,11 @@ def game(request):
     if (left_flag == 1) and request.method == "POST":
         print("发送左")
         left_flag = 0
-        return HttpResponse(list(q_left))
+        return JsonResponse({"list":list(q_left)})
     if (right_flag == 1) and request.method == "POST":
         print("发送右")
         right_flag = 0
-        return HttpResponse(list(q_right))
+        return JsonResponse({"list":list(q_right)})
 
     if request.method == "GET":
         return render(request, "game.html")
@@ -211,13 +211,13 @@ def gen_display(camera):
                         # 输出中指尖的坐标
                         # print("左")
                         # print(hand_landmarks.landmark[12].x)
-                        q_left.append({"left_x": hand_landmarks.landmark[12].x * 500,
-                                       "left_y": hand_landmarks.landmark[12].y * 500}
+                        q_left.append({"left_x": hand_landmarks.landmark[8].x * 650,
+                                       "left_y": hand_landmarks.landmark[8].y * 500}
                                       )
                         left_flag = 1
                     else:
-                        q_right.append({"right_x": hand_landmarks.landmark[12].x * 500,
-                                        "right_y": hand_landmarks.landmark[12].y * 500}
+                        q_right.append({"right_x": hand_landmarks.landmark[8].x * 650,
+                                        "right_y": hand_landmarks.landmark[8].y * 500}
                                        )
                         right_flag = 1
 
