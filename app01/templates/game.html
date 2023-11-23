@@ -15,6 +15,7 @@
             {#background-image: url('your-image-url');#}
             background-size: cover;
             background-color: transparent;
+            z-index: 1;
         }
         .draw{
             position: absolute;
@@ -36,10 +37,9 @@
             <iframe src="http://127.0.0.1:8000/video" width="650" height="500"></iframe>
         </div>
 
-        <div class = "draw">
-        </div>
-          <div class = "draw" >
-              <canvas id="myCanvas" width="650" height="500"></canvas>
+
+          <div class = "draw" style="z-index: 5">
+              <canvas id="myCanvas" width="650" height="500" ></canvas>
         </div>
         <div  class = "fruit" id="fruit0" >
             <img src = "{% static 'image/1fruit.png' %}" style = "width:100px;height:100px;">
