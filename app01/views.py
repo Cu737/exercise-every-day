@@ -117,8 +117,20 @@ def login(request):
         request.session["info"] = {'username': User_object.username}
         # 重新设置session的超时时间,因为之前设置的session的超时时间的 60s
         request.session.set_expiry(60 * 60 * 24)
-        return redirect("/index/")
+        return redirect("/index/home")
     return redirect('/login')
+
+def index_home(request):
+
+    if request.method == 'GET':
+        # 处理 GET 请求的逻辑
+        return render(request, "home.html")
+def index_ranking(request):
+
+    if request.method == 'GET':
+        # 处理 GET 请求的逻辑
+        return render(request, "ranking.html")
+
 
 
 def signup(request):
@@ -145,13 +157,6 @@ def signup(request):
     return redirect('/signup/')
 
 
-def index(request):
-    """
-    转入主页
-    :param request:
-    :return:
-    """
-    return render(request, "index.html")
 
 
 def game(request):

@@ -21,7 +21,8 @@ from app01 import views
 urlpatterns = [
     # 转入登录界面
     path('login/', views.login, name='login'),
-    path('index/', views.index, name='index'),
+    path('index/home', views.index_home, name='index_home'),
+    path('index/ranking', views.index_ranking, name='index_ranking'),
     path('game/', views.game),
     path('signup/', views.signup, name='signup'),
     path('image/code/', views.image_code),
