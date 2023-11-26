@@ -7,7 +7,7 @@ class AuthMiddleware(MiddlewareMixin):
     def process_request(self, request):
 
         # 0.排除不需要的页面
-        if request.path_info in ["/login/", "/image/code/","/signup/"]:
+        if request.path_info in ["/login/", "/image/code/","/signup/","/index/home","index/ranking"]:
             return
 
         if request.path_info == '/':
