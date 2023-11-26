@@ -211,13 +211,13 @@ def gen_display(camera):
                         # 输出中指尖的坐标
                         # print("左")
                         # print(hand_landmarks.landmark[12].x)
-                        q_left.append({"left_x": hand_landmarks.landmark[12].x * 500,
-                                       "left_y": hand_landmarks.landmark[12].y * 500}
+                        q_left.append({"left_x": hand_landmarks.landmark[8].x * 500,
+                                       "left_y": hand_landmarks.landmark[8].y * 500}
                                       )
                         left_flag = 1
                     else:
-                        q_right.append({"right_x": hand_landmarks.landmark[12].x * 500,
-                                        "right_y": hand_landmarks.landmark[12].y * 500}
+                        q_right.append({"right_x": hand_landmarks.landmark[8].x * 500,
+                                        "right_y": hand_landmarks.landmark[8].y * 500}
                                        )
                         right_flag = 1
 
