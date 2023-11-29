@@ -18,7 +18,14 @@
                             <br>
                             <p>——排行榜——
                             </p>
-
+                            <h1>Top Three Users</h1>
+                            
+                            <ul>
+                                {% for user in top_three_users %}
+                                    <li>{{ user.username }} - {{ user.max_score }}</li>
+                                {% endfor %}
+                            </ul>
+                            
                         </div>
 
                     </div>
