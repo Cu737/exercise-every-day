@@ -1,18 +1,114 @@
-{% extends 'frame.html' %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block page-css %}
-    <title>天天运动</title>
-    <link rel="stylesheet" href="{% static 'css/index.css' %}">
-{% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 图标组件库 -->
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
 
-{% block page-main %}
-{#    该盒子数量应该随着可支持运动数量灵活变通。#}
-    <a class="exercise">
-        切水果
-    </a>
-{% endblock %}
 
-{% block page-js %}
+    <link rel="stylesheet" href="{% static 'css/iindex.css' %}">
+    <link class="homecss" rel="stylesheet" href="{% static 'css/home.css' %}">
 
-{% endblock %}
+ {% block extra_css %}{% endblock %}
+    <title>Document</title>
+</head>
+
+<body>
+
+<nav class="sidebar close">
+    <header>
+        <div class="image-text">
+                <span class="image">
+                    <img src="{% static 'image/avatar.JPG' %}">
+                </span>
+            <div class="text logo-text">
+                <span class="name">Phoenix</span>
+                <span class="profession">Web Developer</span>
+            </div>
+        </div>
+
+        <i class="bx bx-chevron-right toggle"></i>
+    </header>
+    <div class="menu-bar">
+        <div class="menu">
+            <li class="search-box">
+                <i class="bx bx-search icon"></i>
+                <input type="text" placeholder="Search...">
+            </li>
+
+            <ul class="menu-links">
+
+                <li class="nav-link" id="game">
+                    <a href="/index/home">
+                        <i class="bx bx-home-alt icon"></i>
+                        <span class="text nav-text">Game</span>
+                    </a>
+                </li>
+
+                <!-- 下面的小li都是一样的样式，只需要修改文字和图标 -->
+                <li class="nav-link">
+                    <a href="/index/ranking">
+                        <i class='bx bx-bar-chart-alt-2 icon'></i>
+                        <span class="text nav-text">Ranking</span>
+                    </a>
+                </li>
+
+                <li class="nav-link">
+                    <a href="#">
+                        <i class='bx bx-bell icon'></i>
+                        <span class="text nav-text">Notifications</span>
+                    </a>
+                </li>
+
+                <li class="nav-link">
+                    <a href="#">
+                        <i class='bx bx-pie-chart-alt icon'></i>
+                        <span class="text nav-text">History</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="bottom-content">
+            <li>
+                <a href="/login">
+                    <i class="bx bx-log-out icon"></i>
+                    <span class="text nav-text">Logout</span>
+                </a>
+            </li>
+            <li class="mode">
+                <div class="sun-moon">
+                    <i class="bx bx-moon icon moon"></i>
+                    <i class="bx bx-sun icon sun"></i>
+                </div>
+                <span class="mode-text text">Dark Mode</span>
+                <div class="toggle-switch">
+                    <span class="switch"></span>
+                </div>
+            </li>
+        </div>
+
+    </div>
+</nav>
+<section class="contents">
+
+    {% block content %}
+        <div class="content-object">
+                {% include 'home.html' %}
+        </div>
+    {% endblock %}
+</section>
+{#<script src="{% static 'js/index_script.js' %}" data-homedarkcss="{% static 'css/home_dark.css' %}"></script>#}
+<script>
+  var homedarkcssPath = "{% static 'css/home_dark.css' %}";
+  var homecssPath = "{% static 'css/home.css' %}";
+</script>
+<script src="{% static 'js/index_script.js' %}"></script>
+
+</body>
+
+</html>

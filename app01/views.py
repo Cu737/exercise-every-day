@@ -1,8 +1,7 @@
-
 import mediapipe as mp
 from django.shortcuts import render, redirect
 import cv2
-from django.http import StreamingHttpResponse
+from django.http import StreamingHttpResponse, JsonResponse
 from django.views.decorators.clickjacking import xframe_options_exempt
 
 from django.shortcuts import render, redirect, HttpResponse
@@ -13,6 +12,13 @@ from utils.code import check_code
 from django.shortcuts import HttpResponse
 from io import BytesIO
 from app01.models import UserInfo
+from collections import deque
+
+
+q_left = deque(maxlen=15)
+left_flag = 0
+q_right = deque(maxlen=15)
+right_flag = 0
 
 
 def image_code(request):
@@ -35,18 +41,18 @@ def image_code(request):
 class LoginForm(forms.Form):
     username = forms.CharField(
         # label="用户名",
-        widget=forms.TextInput(attrs={"class": "form-control", "placeholder":"请输入用户名"}),
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "请输入用户名"}),
         required=True,
     )
     password = forms.CharField(
         # label="密码",
         # render_value=True 表示当提交后,如果密码输入错误,不会自动清空密码输入框的内容
-        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder":"请输入密码"}, ),
+        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "请输入密码"}, ),
         required=True,
     )
     code = forms.CharField(
         # label="验证码",
-        widget=forms.TextInput(attrs={"class": "form-control", "placeholder":"请输入验证码"}),
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "请输入验证码"}),
         required=True,
     )
 
@@ -59,18 +65,18 @@ class LoginForm(forms.Form):
 class SignupForm(forms.Form):
     username = forms.CharField(
         label="用户名",
-        widget=forms.TextInput(attrs={"class": "form-control", "placeholder":"请输入用户名"}),
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "请输入用户名"}),
         required=True,
     )
     password = forms.CharField(
         label="密码",
         # render_value=True 表示当提交后,如果密码输入错误,不会自动清空密码输入框的内容
-        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder":"请输入密码"}, ),
+        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "请输入密码"}, ),
         required=True,
     )
     confirmed_password = forms.CharField(
         label="确认密码",
-        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder":"确认密码"}, ),
+        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "确认密码"}, ),
         required=True,
     )
     # def clean_password(self):
@@ -112,8 +118,20 @@ def login(request):
         request.session["info"] = {'username': User_object.username}
         # 重新设置session的超时时间,因为之前设置的session的超时时间的 60s
         request.session.set_expiry(60 * 60 * 24)
-        return redirect("/index/")
+        return redirect("/index/home")
     return redirect('/login')
+
+def index_home(request):
+
+    if request.method == 'GET':
+        # 处理 GET 请求的逻辑
+        return render(request, "home.html")
+def index_ranking(request):
+
+    if request.method == 'GET':
+        # 处理 GET 请求的逻辑
+        return render(request, "ranking.html")
+
 
 
 def signup(request):
@@ -139,17 +157,25 @@ def signup(request):
         return render(request, 'signup.html', {"form": form})
     return redirect('/signup/')
 
-def index(request):
-    """
-    转入主页
-    :param request:
-    :return:
-    """
-    return render(request, "index.html")
+
 
 
 def game(request):
-    return render(request, "game.html")
+    global left_flag
+    global right_flag
+
+    if (left_flag == 1) and request.method == "POST":
+        print("发送左")
+        left_flag = 0
+        return JsonResponse({"list":list(q_left)})
+    if (right_flag == 1) and request.method == "POST":
+        print("发送右")
+        right_flag = 0
+        return JsonResponse({"list":list(q_right)})
+
+    if request.method == "GET":
+        return render(request, "game.html")
+    return HttpResponse()
 
 
 def logout(request):
@@ -162,13 +188,17 @@ def logout(request):
 
 
 def gen_display(camera):
+    global left_flag
+    global right_flag
     mp_draw = mp.solutions.drawing_utils
     mp_hands = mp.solutions.hands
     hands = mp_hands.Hands(max_num_hands=2)
     # 循环读取摄像头的画面
     while True:
+
         # 读取一帧图片
         ret, frame = camera.read()
+        frame = cv2.flip(frame, 1)
         if ret:
             # 将图片进行编码
 
@@ -179,18 +209,23 @@ def gen_display(camera):
 
                 for hand_landmarks in results.multi_hand_landmarks:
                     handedness = results.multi_handedness[0]
-                    print(handedness.classification[0].label)
+                    # print(handedness.classification[0].label)
                     # 关键点可视化
                     mp_draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
                     if handedness.classification[0].label == 'Left':
 
-
                         # 输出中指尖的坐标
-                        print("左")
-                        print(hand_landmarks.landmark[12])
+                        # print("左")
+                        # print(hand_landmarks.landmark[12].x)
+                        q_left.append({"left_x": hand_landmarks.landmark[8].x * 650,
+                                       "left_y": hand_landmarks.landmark[8].y * 500}
+                                      )
+                        left_flag = 1
                     else:
-                        print("右")
-                        print(hand_landmarks.landmark[12])
+                        q_right.append({"right_x": hand_landmarks.landmark[8].x * 650,
+                                        "right_y": hand_landmarks.landmark[8].y * 500}
+                                       )
+                        right_flag = 1
 
             ret, frame = cv2.imencode('.jpeg', frame)
 
@@ -209,3 +244,16 @@ def video(request):
 
     # 使用StreamingHttpResponse类传输视频流，content_type为'multipart/x-mixed-replace; boundary=frame'
     return StreamingHttpResponse(gen_display(camera), content_type='multipart/x-mixed-replace; boundary=frame')
+
+
+#从数据库中获取最高的前三名
+def top_three_scores(request):
+    top_three_users = UserInfo.objects.order_by('-max_score')[:3]
+    # top_three_users = [
+    #     {'username': 'user1', 'max_score': 100},
+    #     {'username': 'user2', 'max_score': 90},
+    #     {'username': 'user3', 'max_score': 80},
+    # ]
+    print(top_three_users)
+    return render(request, 'ranking.html', {'top_three_users': top_three_users})
+
