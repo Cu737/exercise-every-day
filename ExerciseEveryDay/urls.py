@@ -27,5 +27,6 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('image/code/', views.image_code),
     path('logout/', views.logout),
-    path('video/',views.video)
+    path('video/',views.video),
+    path('index/ranking/', views.top_three_scores, name='top_three_scores')
 ]
