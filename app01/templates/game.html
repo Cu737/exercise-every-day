@@ -96,17 +96,19 @@
             timeInterval = 20;
 
             score = 0;
-            seconds = 180;
 
           // 每隔一秒执行一次updateTimer函数
 
             if (flag === false)
             {
+                seconds = 180;
+
                  score = 0;
+                 flag = true;
                  score_text.innerText = score;
                 interval = setInterval(updateTimer, 1000);
                 startInterval();
-                flag = true;
+
             }
 
 
