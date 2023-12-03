@@ -81,6 +81,8 @@
         var start = document.getElementById("start-btn");
         var seconds = 180;
         var score_text = document.getElementById("score");
+        var interval;
+        var flag = false;
 
         let c = document.getElementById("myCanvas");
         $.ajaxSetup({
@@ -92,12 +94,24 @@
       // 定义一个函数开始倒计时
         function startTimer() {
             timeInterval = 20;
+
             score = 0;
-            seconds = 180;
-            score_text.innerText = score;
+
           // 每隔一秒执行一次updateTimer函数
-          interval = setInterval(updateTimer, 1000);
-          startInterval();
+
+            if (flag === false)
+            {
+                seconds = 180;
+
+                 score = 0;
+                 flag = true;
+                 score_text.innerText = score;
+                interval = setInterval(updateTimer, 1000);
+                startInterval();
+
+            }
+
+
         }
 
         function updateTimer() {
@@ -115,6 +129,7 @@
               if(seconds === 0)
               {
 
+                  flag = false;
                   clearInterval(interval);
                   clearInterval(fruitInterval);
                   console.log(score)
@@ -352,14 +367,16 @@
                         console.log(p2_y)
                         if(p2_x>box_left&&p2_x<box_left+100&&p2_y>box_top-30&&p2_y<box_top+100)
                         {
+                            all_box[i].style.display = "none"
                             right_num = right_num+1
                             console.log(right_num)
                         }
                     }
-                    if(right_num>1)
+                    if(right_num>0)
                     {
                         score = score+1
                         score_text.innerText = score;
+
                     }
                 }
             }
