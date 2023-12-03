@@ -55,12 +55,10 @@
         <div  class = "fruit" id="fruit3" style="display:block;position: absolute;top: 10px;left: 10px;">
             <img src = "{% static 'image/4fruit.png' %}" style = "width:100px;height:100px;">
         </div>
-{#        <div  class = "fruit" id="fruit3" >#}
-{#            <img src = "{% static 'image/4fruit.png' %}" style = "width:100px;height:100px;position: absolute;top:100px;left:100px">#}
-{#        </div>#}
         <div>
-            <div style="display: inline-block;margin-top:50px;margin-left:10px;height:150px;width:150px;background-color: cornflowerblue">
-            得分
+            <div style="display: inline-block;margin-top:50px;margin-left:10px;height:150px;width:150px;background-color: transparent">
+             <div class="time"  style="margin-top:30px;margin-left: 37px;">得分</div>
+                <div class="time" id = "score" style="margin-top:30px;margin-left: 60px;font-size: 40px">0</div>
             </div>
         <div style="display: inline-block;margin-top:10px;margin-left:10px;height:150px;width:150px;background-color: transparent">
             <div class = "time" style="margin-top:30px;margin-left: 37px;">3:00</div>
@@ -79,9 +77,10 @@
 {% block page-js %}
     <script>
         var score = 0
-        var timer = document.getElementsByClassName("time")[0];
+        var timer = document.getElementsByClassName("time")[2];
         var start = document.getElementById("start-btn");
-        var seconds = 10;
+        var seconds = 180;
+        var score_text = document.getElementById("score");
 
         let c = document.getElementById("myCanvas");
         $.ajaxSetup({
@@ -91,10 +90,12 @@
  　　})
 
       // 定义一个函数开始倒计时
-        // 定义一个函数开始倒计时
         function startTimer() {
+            score = 0;
+            seconds = 180;
           // 每隔一秒执行一次updateTimer函数
           interval = setInterval(updateTimer, 1000);
+          startInterval();
         }
 
         function updateTimer() {
@@ -111,31 +112,15 @@
           timer.innerHTML = minutes + ":" + secondsLeft;
               if(seconds === 0)
               {
+
                   clearInterval(interval);
+                  clearInterval(fruitInterval);
+                  console.log(score)
               }
         }
 
             // 给开始按钮添加点击事件监听器，调用startTimer函数
         start.addEventListener("click", startTimer);
-
-        function updateTimer() {
-            //每隔减一秒
-            seconds = seconds-1;
-          // 将秒数转换为分和秒的格式
-          var minutes = Math.floor(seconds / 60);
-          var secondsLeft = seconds % 60;
-          // 如果秒数小于10，前面加一个0
-          if (secondsLeft < 10) {
-            secondsLeft = "0" + secondsLeft;
-          }
-          // 更新页面中的倒计时
-          timer.innerHTML = minutes + ":" + secondsLeft;
-              if(seconds === 0)
-              {
-                  clearInterval(interval);
-              }
-        }
-
         function myFunction() {
             var numBoxes = Math.floor(Math.random() * 4);
             for (var i = 0; i < numBoxes; i++) {
@@ -224,6 +209,8 @@
             })
         },50)
 
+
+
         var box0 = document.getElementById('fruit0');
         var box1 = document.getElementById('fruit1');
         var box2 = document.getElementById('fruit2');
@@ -245,7 +232,7 @@
         var positionY4 = 500; // vertical position
         var gravity = 0.2; // gravity
         var timeInterval = 20; // time interval in milliseconds
-        setInterval(function() {
+        fruit = function() {
             time += 1;
             velocityY += gravity; // v = u + at
             velocityY1 += gravity;
@@ -325,7 +312,12 @@
                     box3.style.display = 'block';
                 }
             }
-        }, timeInterval);
+        }
+        function startInterval() {// 每隔 1000 毫秒（1 秒）调用一次 showTime 函数
+        fruitInterval = setInterval(fruit, timeInterval);
+        }
+
+
         function start_game() {
             var c = document.getElementById("game-video");
             console.log(c)
@@ -370,6 +362,7 @@
                     if(right_num>1)
                     {
                         score = score+1
+                        score_text.text = score;
                     }
                 }
             }
