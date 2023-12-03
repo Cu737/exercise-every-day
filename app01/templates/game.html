@@ -75,7 +75,7 @@
     <script>
         var timer = document.getElementsByClassName("time")[0];
         var start = document.getElementById("start-btn");
-        var seconds = 10;
+        var seconds = 180;
 
         let c = document.getElementById("myCanvas");
         $.ajaxSetup({
@@ -86,8 +86,10 @@
 
       // 定义一个函数开始倒计时
         function startTimer() {
+            seconds = 180;
           // 每隔一秒执行一次updateTimer函数
           interval = setInterval(updateTimer, 1000);
+          startInterval();
         }
 
         function updateTimer() {
@@ -104,7 +106,9 @@
           timer.innerHTML = minutes + ":" + secondsLeft;
               if(seconds === 0)
               {
+
                   clearInterval(interval);
+                  clearInterval(fruitInterval);
               }
         }
 
@@ -198,6 +202,8 @@
             })
         },50)
 
+
+
         var box0 = document.getElementById('fruit0');
         var box1 = document.getElementById('fruit1');
         var box2 = document.getElementById('fruit2');
@@ -219,7 +225,7 @@
         var positionY4 = 500; // vertical position
         var gravity = 0.2; // gravity
         var timeInterval = 20; // time interval in milliseconds
-        setInterval(function() {
+        fruit = function() {
             time += 1;
             velocityY += gravity; // v = u + at
             velocityY1 += gravity;
@@ -299,7 +305,10 @@
                     box3.style.display = 'block';
                 }
             }
-        }, timeInterval);
+        }
+        function startInterval() {// 每隔 1000 毫秒（1 秒）调用一次 showTime 函数
+        fruitInterval = setInterval(fruit, timeInterval);
+        }
 
 
 
