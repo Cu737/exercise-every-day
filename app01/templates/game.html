@@ -93,11 +93,11 @@
 
       // 定义一个函数开始倒计时
         function startTimer() {
+            timeInterval = 20;
 
             score = 0;
             seconds = 180;
-            //clearInterval(fruitInterval);
-            //clearInterval(interval);
+
           // 每隔一秒执行一次updateTimer函数
 
             if (flag === false)
@@ -146,12 +146,7 @@
             }
         }
             // 给开始按钮添加点击事件监听器，调用startTimer函数
-        start.addEventListener("click", startTimer);
-        function startgame()
-        {
 
-        }
-        {#setInterval(myFunction, 5200);#}
         setInterval(function ()
         {
             $.ajax({
@@ -173,7 +168,7 @@
                             let p1_y;
                             let p2_x;
                             let p2_y;
-                            for(let i = 0 ; i < 14; i++)
+                            for(let i = 0 ; i < 9; i++)
                             {
                                 p1_x = data["list"][i]["left_x"]
                                 p1_y = data["list"][i]["left_y"]
@@ -193,7 +188,7 @@
                             let p1_y;
                             let p2_x;
                             let p2_y;
-                            for(let i = 0 ; i < 14; i++)
+                            for(let i = 0 ; i < 9; i++)
                             {
                                 p1_x = data["list"][i]["right_x"]
                                 p1_y = data["list"][i]["right_y"]
@@ -354,7 +349,7 @@
                 console.log(all_box[i])
                 if(all_box[i].style.display==="block")
                 {
-                    for(let j=0;j<15;j++)
+                    for(let j=0;j<10;j++)
                     {
                         console.log("开始执行")
 
@@ -377,8 +372,9 @@
                     }
                     if(right_num>0)
                     {
-                        score = score+1;
+                        score = score+1
                         score_text.innerText = score;
+
                     }
                 }
             }
