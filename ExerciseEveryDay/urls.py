@@ -21,11 +21,12 @@ from app01 import views
 urlpatterns = [
     # 转入登录界面
     path('login/', views.login, name='login'),
-    path('index/home', views.index_home, name='index_home'),
-    path('index/ranking', views.index_ranking, name='index_ranking'),
+    path('index/home/', views.index_home, name='index_home'),
+    path('index/ranking/', views.index_ranking, name='index_ranking'),
     path('game/', views.game),
     path('signup/', views.signup, name='signup'),
     path('image/code/', views.image_code),
     path('logout/', views.logout),
-    path('video/',views.video)
+    path('video/',views.video),
+   # path('index/ranking/', views.top_three_scores, name='top_three_scores')
 ]

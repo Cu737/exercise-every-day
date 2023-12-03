@@ -14,6 +14,7 @@ from io import BytesIO
 from app01.models import UserInfo
 from collections import deque
 
+
 q_left = deque(maxlen=15)
 left_flag = 0
 q_right = deque(maxlen=15)
@@ -126,10 +127,16 @@ def index_home(request):
         # 处理 GET 请求的逻辑
         return render(request, "home.html")
 def index_ranking(request):
-
-    if request.method == 'GET':
-        # 处理 GET 请求的逻辑
-        return render(request, "ranking.html")
+    print("aa")
+    top_three_users = UserInfo.objects.order_by('-max_score')[:3]
+    # top_three_users = [
+    #     {'username': 'user1', 'max_score': 100},
+    #     {'username': 'user2', 'max_score': 90},
+    #     {'username': 'user3', 'max_score': 80},
+    # ]
+    print("aa")
+    print(top_three_users)
+    return render(request, 'ranking.html', {'top_three_users': top_three_users})
 
 
 
@@ -243,3 +250,7 @@ def video(request):
 
     # 使用StreamingHttpResponse类传输视频流，content_type为'multipart/x-mixed-replace; boundary=frame'
     return StreamingHttpResponse(gen_display(camera), content_type='multipart/x-mixed-replace; boundary=frame')
+
+
+
+
