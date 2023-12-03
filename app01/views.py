@@ -15,9 +15,9 @@ from app01.models import UserInfo
 from collections import deque
 
 
-q_left = deque(maxlen=15)
+q_left = deque(maxlen=10)
 left_flag = 0
-q_right = deque(maxlen=15)
+q_right = deque(maxlen=10)
 right_flag = 0
 
 
