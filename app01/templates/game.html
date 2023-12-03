@@ -56,8 +56,9 @@
             <img src = "{% static 'image/4fruit.png' %}" style = "width:100px;height:100px;">
         </div>
         <div>
-            <div style="display: inline-block;margin-top:50px;margin-left:10px;height:150px;width:150px;background-color: cornflowerblue">
-            得分
+            <div style="display: inline-block;margin-top:50px;margin-left:10px;height:150px;width:150px;background-color: transparent">
+             <div class="time"  style="margin-top:30px;margin-left: 37px;">得分</div>
+                <div class="time" id = "score" style="margin-top:30px;margin-left: 60px;font-size: 40px">0</div>
             </div>
         <div style="display: inline-block;margin-top:10px;margin-left:10px;height:150px;width:150px;background-color: transparent">
             <div class = "time" style="margin-top:30px;margin-left: 37px;">3:00</div>
@@ -76,9 +77,10 @@
 {% block page-js %}
     <script>
         var score = 0
-        var timer = document.getElementsByClassName("time")[0];
+        var timer = document.getElementsByClassName("time")[2];
         var start = document.getElementById("start-btn");
         var seconds = 180;
+        var score_text = document.getElementById("score");
 
         let c = document.getElementById("myCanvas");
         $.ajaxSetup({
@@ -89,6 +91,7 @@
 
       // 定义一个函数开始倒计时
         function startTimer() {
+            score = 0;
             seconds = 180;
           // 每隔一秒执行一次updateTimer函数
           interval = setInterval(updateTimer, 1000);
@@ -112,6 +115,7 @@
 
                   clearInterval(interval);
                   clearInterval(fruitInterval);
+                  console.log(score)
               }
         }
 
@@ -313,7 +317,7 @@
         fruitInterval = setInterval(fruit, timeInterval);
         }
 
-        }, timeInterval);
+
         function start_game() {
             var c = document.getElementById("game-video");
             console.log(c)
@@ -358,6 +362,7 @@
                     if(right_num>1)
                     {
                         score = score+1
+                        score_text.text = score;
                     }
                 }
             }
