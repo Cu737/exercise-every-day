@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{% static 'css/game.css' %}">
     <style>
         .fruit{
+            display: inline-block;
             position: absolute;
             top: 10px;
             left: 10px;
@@ -32,25 +33,26 @@
 {% endblock %}
 
 {% block page-main %}
-     <div class = "content" style="position:relative;width: 850px;height:600px;background-color: white;margin-top: 50px;margin-left: 50px;border-radius: 15px;background-color: rgba(255, 255, 255, 0.75);">
+    {#    该盒子数量应该随着可支持运动数量灵活变通。#}
+    <div class = "content" style="position:relative;width: 850px;height:600px;background-color: white;margin-top: 50px;margin-left: 50px;border-radius: 15px;background-color: rgba(255, 255, 255, 0.75);">
         <div style="display:inline-block;float:left;margin-left: 10px;margin-top: 50px;width:650px;height:500px;">
-            <iframe src="http://127.0.0.1:8000/video" width="650" height="500"></iframe>
+            <iframe id ="game-video" src="{% static 'image/2fruit.png' %}" width="650" height="500"></iframe>
         </div>
 
 
           <div class = "draw" style="z-index: 5">
               <canvas id="myCanvas" width="650" height="500" ></canvas>
         </div>
-        <div  class = "fruit" id="fruit0" >
+        <div  class = "fruit" id="fruit0" style="display:block;position: absolute;top: 10px;left: 10px;">
             <img src = "{% static 'image/1fruit.png' %}" style = "width:100px;height:100px;">
         </div>
-        <div  class = "fruit" id="fruit1" >
+        <div  class = "fruit" id="fruit1" style="display:block;position: absolute;top: 10px;left: 10px;">
             <img src = "{% static 'image/2fruit.png' %}" style = "width:100px;height:100px;">
         </div>
-        <div  class = "fruit" id="fruit2" >
+        <div  class = "fruit" id="fruit2" style="display:block;position: absolute;top: 10px;left: 10px;">
             <img src = "{% static 'image/3fruit.png' %}" style = "width:100px;height:100px;">
         </div>
-        <div  class = "fruit" id="fruit3" >
+        <div  class = "fruit" id="fruit3" style="display:block;position: absolute;top: 10px;left: 10px;">
             <img src = "{% static 'image/4fruit.png' %}" style = "width:100px;height:100px;">
         </div>
         <div>
@@ -59,12 +61,12 @@
             </div>
         <div style="display: inline-block;margin-top:10px;margin-left:10px;height:150px;width:150px;background-color: transparent">
             <div class = "time" style="margin-top:30px;margin-left: 37px;">3:00</div>
-            <button type="submit" id = "start-btn" class="btn btn-primary" style="margin-top:12px;margin-left: 45px;--bs-btn-hover-bg: rgb(241,181,162);
+            <button type="submit" id = "start-btn" class="btn btn-primary" onclick="start_game()" style="margin-top:12px;margin-left: 45px;--bs-btn-hover-bg: rgb(241,181,162);
     --bs-btn-hover-border-color: rgb(241,181,162)">开始</button>
         </div>
-        <div style="display: inline-block;margin-top:10px;margin-left:10px;height:150px;width:150px;background-color: cornflowerblue">
-            排行榜
-        </div>
+{#        <div style="display: inline-block;margin-top:10px;margin-left:10px;height:150px;width:150px;background-color: cornflowerblue">#}
+{#            排行榜#}
+{#        </div>#}
 
         </div>
 
@@ -73,6 +75,7 @@
 
 {% block page-js %}
     <script>
+        var score = 0
         var timer = document.getElementsByClassName("time")[0];
         var start = document.getElementById("start-btn");
         var seconds = 180;
@@ -127,8 +130,7 @@
         start.addEventListener("click", startTimer);
         function startgame()
         {
-            {#var start_button = document.getElementById("start");#}
-            {#start_button.#}
+
         }
         {#setInterval(myFunction, 5200);#}
         setInterval(function ()
@@ -152,9 +154,8 @@
                             let p1_y;
                             let p2_x;
                             let p2_y;
-                            for(let i = 0 ; i < 15; i++)
+                            for(let i = 0 ; i < 14; i++)
                             {
-
                                 p1_x = data["list"][i]["left_x"]
                                 p1_y = data["list"][i]["left_y"]
                                 p2_x = data["list"][i+1]["left_x"]
@@ -164,6 +165,7 @@
                                 ctx.lineTo(p2_x, p2_y); // 定义线条的终点
                                 ctx.stroke(); // 绘制线条
                             }
+                            judge_score(data,"left_x","left_y")
                         }
                         else if (data["list"][0].hasOwnProperty("right_x"))
                         {
@@ -172,7 +174,7 @@
                             let p1_y;
                             let p2_x;
                             let p2_y;
-                            for(let i = 0 ; i < 15; i++)
+                            for(let i = 0 ; i < 14; i++)
                             {
                                 p1_x = data["list"][i]["right_x"]
                                 p1_y = data["list"][i]["right_y"]
@@ -183,6 +185,7 @@
                                 ctx.lineTo(p2_x, p2_y); // 定义线条的终点
                                 ctx.stroke(); // 绘制线条
                             }
+                            judge_score(data,"right_x","right_y")
                         }
 
                     }
@@ -310,8 +313,63 @@
         fruitInterval = setInterval(fruit, timeInterval);
         }
 
+        }, timeInterval);
+        function start_game() {
+            var c = document.getElementById("game-video");
+            console.log(c)
+            c.src = "http://127.0.0.1:8000/video"
+            console.log("执行到这里")
+        }
+        function judge_score(data,str1,str2)
+        {
+            var box0 = document.getElementById('fruit0');
+            console.log(box0.style)
+            var box1 = document.getElementById('fruit1');
+            var box2 = document.getElementById('fruit2');
+            var box3 = document.getElementById('fruit3');
+            var all_box = [box0,box1,box2,box3]
+            for(let i = 0;i<4;i++)
+            {
+                var right_num = 0
+                console.log(all_box[i].style)
+                console.log(all_box[i])
+                if(all_box[i].style.display==="block")
+                {
+                    for(let j=0;j<15;j++)
+                    {
+                        console.log("开始执行")
 
+                        var p2_x = data["list"][j][str1]
+                        var p2_y = data["list"][j][str2]
+                        box_left = Number(all_box[i].style.left.slice(0,all_box[i].style.left.length-2))
+                        box_top = Number(all_box[i].style.top.slice(0,all_box[i].style.left.length-2))
+                        console.log(box_left)
+                        console.log(box_top)
+                        console.log(box_left+100)
+                        console.log(box_top+100)
+                        console.log(p2_x)
+                        console.log(p2_y)
+                        if(p2_x>box_left&&p2_x<box_left+100&&p2_y>box_top-30&&p2_y<box_top+100)
+                        {
+                            right_num = right_num+1
+                            console.log(right_num)
+                        }
+                    }
+                    if(right_num>1)
+                    {
+                        score = score+1
+                    }
+                }
+            }
+            {#var box1top = box0.style.top#}
+            {#var box2top = box1.style.top#}
+            {#var box3top = box2.style.top#}
+            {#var box4top = box3.style.top#}
+            {#var box1left = box0.style.left#}
+            {#var box2left = box1.style.left#}
+            {#var box3left = box2.style.left#}
+            {#var box4left = box3.style.left#}
 
-
+        }
     </script>
 {% endblock %}
