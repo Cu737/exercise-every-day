@@ -10,3 +10,4 @@
 /db.sqlite3
 /ExerciseEveryDay/local_settings.py
 /app01/static/js/bootstrap.min.js.map
+/app01/migrations/0001_initial.py
