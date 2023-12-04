@@ -1,24 +1,27 @@
-{% extends 'frame.html' %}
+{% extends 'index.html' %}
 {% load static %}
 
 {% block page-css %}
     <title>天天运动</title>
-    <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <link rel="stylesheet" href="{% static 'css/game.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{#    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">#}
+
+
     <style>
-        .fruit{
+        .fruit {
             display: inline-block;
             position: absolute;
             top: 10px;
             left: 10px;
             width: 100px;
             height: 100px;
-            {#background-image: url('your-image-url');#}
-            background-size: cover;
+        {#background-image: url('your-image-url');#} background-size: cover;
             background-color: transparent;
             z-index: 1;
         }
-        .draw{
+
+        .draw {
             position: absolute;
             width: 650px;
             height: 500px;
@@ -32,42 +35,45 @@
 
 {% endblock %}
 
-{% block page-main %}
+{% block content %}
     {#    该盒子数量应该随着可支持运动数量灵活变通。#}
-    <div class = "content" style="position:relative;width: 850px;height:600px;background-color: white;margin-top: 50px;margin-left: 50px;border-radius: 15px;background-color: rgba(255, 255, 255, 0.75);">
+    <div class="content"
+         style="position:relative;width: 850px;height:600px;background-color: white;margin-top: 50px;margin-left: 50px;border-radius: 15px;background-color: rgba(255, 255, 255, 0.75);">
         <div style="display:inline-block;float:left;margin-left: 10px;margin-top: 50px;width:650px;height:500px;">
-            <iframe id ="game-video" src="{% static 'image/2fruit.png' %}" width="650" height="500"></iframe>
+            <iframe id="game-video" src="{% static 'image/2fruit.png' %}" width="650" height="500"></iframe>
         </div>
 
 
-          <div class = "draw" style="z-index: 5">
-              <canvas id="myCanvas" width="650" height="500" ></canvas>
+        <div class="draw" style="z-index: 5">
+            <canvas id="myCanvas" width="650" height="500"></canvas>
         </div>
-        <div  class = "fruit" id="fruit0" style="display:block;position: absolute;top: 10px;left: 10px;">
-            <img src = "{% static 'image/1fruit.png' %}" style = "width:100px;height:100px;">
+        <div class="fruit" id="fruit0" style="display:block;position: absolute;top: 10px;left: 10px;">
+            <img src="{% static 'image/1fruit.png' %}" style="width:100px;height:100px;">
         </div>
-        <div  class = "fruit" id="fruit1" style="display:block;position: absolute;top: 10px;left: 10px;">
-            <img src = "{% static 'image/2fruit.png' %}" style = "width:100px;height:100px;">
+        <div class="fruit" id="fruit1" style="display:block;position: absolute;top: 10px;left: 10px;">
+            <img src="{% static 'image/2fruit.png' %}" style="width:100px;height:100px;">
         </div>
-        <div  class = "fruit" id="fruit2" style="display:block;position: absolute;top: 10px;left: 10px;">
-            <img src = "{% static 'image/3fruit.png' %}" style = "width:100px;height:100px;">
+        <div class="fruit" id="fruit2" style="display:block;position: absolute;top: 10px;left: 10px;">
+            <img src="{% static 'image/3fruit.png' %}" style="width:100px;height:100px;">
         </div>
-        <div  class = "fruit" id="fruit3" style="display:block;position: absolute;top: 10px;left: 10px;">
-            <img src = "{% static 'image/4fruit.png' %}" style = "width:100px;height:100px;">
+        <div class="fruit" id="fruit3" style="display:block;position: absolute;top: 10px;left: 10px;">
+            <img src="{% static 'image/4fruit.png' %}" style="width:100px;height:100px;">
         </div>
         <div>
             <div style="display: inline-block;margin-top:50px;margin-left:10px;height:150px;width:150px;background-color: transparent">
-             <div class="time"  style="margin-top:30px;margin-left: 37px;">得分</div>
-                <div class="time" id = "score" style="margin-top:30px;margin-left: 60px;font-size: 40px">0</div>
+                <div class="time" style="margin-top:30px;margin-left: 37px;">得分</div>
+                <div class="time" id="score" style="margin-top:30px;margin-left: 60px;font-size: 40px">0</div>
             </div>
-        <div style="display: inline-block;margin-top:10px;margin-left:10px;height:150px;width:150px;background-color: transparent">
-            <div class = "time" style="margin-top:30px;margin-left: 37px;">3:00</div>
-            <button type="submit" id = "start-btn" class="btn btn-primary" onclick="start_game()" style="margin-top:12px;margin-left: 45px;--bs-btn-hover-bg: rgb(241,181,162);
-    --bs-btn-hover-border-color: rgb(241,181,162)">开始</button>
-        </div>
-{#        <div style="display: inline-block;margin-top:10px;margin-left:10px;height:150px;width:150px;background-color: cornflowerblue">#}
-{#            排行榜#}
-{#        </div>#}
+            <div style="display: inline-block;margin-top:10px;margin-left:10px;height:150px;width:150px;background-color: transparent">
+                <div class="time" style="margin-top:30px;margin-left: 37px;">3:00</div>
+{#                btn btn-primary#}
+                <button type="submit" id="start-btn" class="btn btn-primary" onclick="start_game()" style="margin-top:12px;margin-left: 45px;--bs-btn-hover-bg: rgb(241,181,162);
+    --bs-btn-hover-border-color: rgb(241,181,162)">开始
+                </button>
+            </div>
+            {#        <div style="display: inline-block;margin-top:10px;margin-left:10px;height:150px;width:150px;background-color: cornflowerblue">#}
+            {#            排行榜#}
+            {#        </div>#}
 
         </div>
 
@@ -87,25 +93,24 @@
         let c = document.getElementById("myCanvas");
         $.ajaxSetup({
 
- 　　　　data: {csrfmiddlewaretoken: '{{ csrf_token }}'}
+            data: {csrfmiddlewaretoken: '{{ csrf_token }}'}
 
- 　　})
+        })
 
-      // 定义一个函数开始倒计时
+        // 定义一个函数开始倒计时
         function startTimer() {
             timeInterval = 20;
 
             score = 0;
 
-          // 每隔一秒执行一次updateTimer函数
+            // 每隔一秒执行一次updateTimer函数
 
-            if (flag === false)
-            {
+            if (flag === false) {
                 seconds = 180;
 
-                 score = 0;
-                 flag = true;
-                 score_text.innerText = score;
+                score = 0;
+                flag = true;
+                score_text.innerText = score;
                 interval = setInterval(updateTimer, 1000);
                 startInterval();
 
@@ -116,41 +121,41 @@
 
         function updateTimer() {
             //每隔减一秒
-            seconds = seconds-1;
-          // 将秒数转换为分和秒的格式
-          var minutes = Math.floor(seconds / 60);
-          var secondsLeft = seconds % 60;
-          // 如果秒数小于10，前面加一个0
-          if (secondsLeft < 10) {
-            secondsLeft = "0" + secondsLeft;
-          }
-          // 更新页面中的倒计时
-          timer.innerHTML = minutes + ":" + secondsLeft;
-              if(seconds === 0)
-              {
-
-                  flag = false;
-                  clearInterval(interval);
-                  clearInterval(fruitInterval);
-                  console.log(score)
-              }
+            seconds = seconds - 1;
+            // 将秒数转换为分和秒的格式
+            var minutes = Math.floor(seconds / 60);
+            var secondsLeft = seconds % 60;
+            // 如果秒数小于10，前面加一个0
+            if (secondsLeft < 10) {
+                secondsLeft = "0" + secondsLeft;
+            }
+            // 更新页面中的倒计时
+            timer.innerHTML = minutes + ":" + secondsLeft;
+            if (seconds === 0) {
+                flag = false;
+                clearInterval(interval);
+                clearInterval(fruitInterval);
+                console.log(score);
+                {#在这里实现将更新score#}
+            }
         }
 
-            // 给开始按钮添加点击事件监听器，调用startTimer函数
+        // 给开始按钮添加点击事件监听器，调用startTimer函数
         start.addEventListener("click", startTimer);
+
         function myFunction() {
             var numBoxes = Math.floor(Math.random() * 4);
             for (var i = 0; i < numBoxes; i++) {
-                var fruit_name = "fruit"+i;
+                var fruit_name = "fruit" + i;
                 var box = document.getElementById(fruit_name);
                 //console.log(box)
                 box.style.display = "block"
             }
         }
-            // 给开始按钮添加点击事件监听器，调用startTimer函数
 
-        setInterval(function ()
-        {
+        // 给开始按钮添加点击事件监听器，调用startTimer函数
+
+        setInterval(function () {
             $.ajax({
                 url: '/game/',
                 type: 'post',
@@ -161,57 +166,46 @@
                     ctx.lineWidth = 15;
 
 
-                    if(typeof data !== "string")
-                    {
-                        if (data["list"][0].hasOwnProperty("left_x"))
-                        {
+                    if (typeof data !== "string") {
+                        if (data["list"][0].hasOwnProperty("left_x")) {
                             ctx.clearRect(0, 0, c.width, c.height);
                             let p1_x;
                             let p1_y;
                             let p2_x;
                             let p2_y;
-                            for(let i = 0 ; i < 9; i++)
-                            {
+                            for (let i = 0; i < 9; i++) {
                                 p1_x = data["list"][i]["left_x"]
                                 p1_y = data["list"][i]["left_y"]
-                                p2_x = data["list"][i+1]["left_x"]
-                                p2_y = data["list"][i+1]["left_y"]
+                                p2_x = data["list"][i + 1]["left_x"]
+                                p2_y = data["list"][i + 1]["left_y"]
                                 ctx.beginPath(); // 开始一条新的路径
                                 ctx.moveTo(p1_x, p1_y); // 定义线条的起点
                                 ctx.lineTo(p2_x, p2_y); // 定义线条的终点
                                 ctx.stroke(); // 绘制线条
                             }
-                            judge_score(data,"left_x","left_y")
-                        }
-                        else if (data["list"][0].hasOwnProperty("right_x"))
-                        {
+                            judge_score(data, "left_x", "left_y")
+                        } else if (data["list"][0].hasOwnProperty("right_x")) {
                             ctx.clearRect(0, 0, c.width, c.height);
                             let p1_x;
                             let p1_y;
                             let p2_x;
                             let p2_y;
-                            for(let i = 0 ; i < 9; i++)
-                            {
+                            for (let i = 0; i < 9; i++) {
                                 p1_x = data["list"][i]["right_x"]
                                 p1_y = data["list"][i]["right_y"]
-                                p2_x = data["list"][i+1]["right_x"]
-                                p2_y = data["list"][i+1]["right_y"]
+                                p2_x = data["list"][i + 1]["right_x"]
+                                p2_y = data["list"][i + 1]["right_y"]
                                 ctx.beginPath(); // 开始一条新的路径
                                 ctx.moveTo(p1_x, p1_y); // 定义线条的起点
                                 ctx.lineTo(p2_x, p2_y); // 定义线条的终点
                                 ctx.stroke(); // 绘制线条
                             }
-                            judge_score(data,"right_x","right_y")
+                            judge_score(data, "right_x", "right_y")
                         }
 
-                    }
-                    else
-                    {
+                    } else {
                         ctx.clearRect(0, 0, c.width, c.height);
                     }
-
-
-
 
 
                 },
@@ -219,8 +213,7 @@
                     console.log(error)
                 }
             })
-        },50)
-
+        }, 50)
 
 
         var box0 = document.getElementById('fruit0');
@@ -244,7 +237,7 @@
         var positionY4 = 500; // vertical position
         var gravity = 0.2; // gravity
         var timeInterval = 20; // time interval in milliseconds
-        fruit = function() {
+        fruit = function () {
             time += 1;
             velocityY += gravity; // v = u + at
             velocityY1 += gravity;
@@ -277,8 +270,7 @@
                 velocityY = v_rule;
                 var numBoxes = Math.floor(Math.random() * 4);
                 //console.log(numBoxes);
-                if(numBoxes%2 === 0)
-                {
+                if (numBoxes % 2 === 0) {
                     box0.style.display = 'block';
                 }
             }
@@ -291,8 +283,7 @@
                 velocityY1 = v_rule;
                 var numBoxes = Math.floor(Math.random() * 4);
                 //console.log(numBoxes);
-                if(numBoxes%2 === 0)
-                {
+                if (numBoxes % 2 === 0) {
                     box1.style.display = 'block';
                 }
             }
@@ -305,8 +296,7 @@
                 velocityY2 = v_rule;
                 var numBoxes = Math.floor(Math.random() * 4);
                 //console.log(numBoxes);
-                if(numBoxes%2 === 0)
-                {
+                if (numBoxes % 2 === 0) {
                     box2.style.display = 'block';
                 }
             }
@@ -319,14 +309,14 @@
                 velocityY3 = v_rule;
                 var numBoxes = Math.floor(Math.random() * 4);
                 //console.log(numBoxes);
-                if(numBoxes%2 === 0)
-                {
+                if (numBoxes % 2 === 0) {
                     box3.style.display = 'block';
                 }
             }
         }
+
         function startInterval() {// 每隔 1000 毫秒（1 秒）调用一次 showTime 函数
-        fruitInterval = setInterval(fruit, timeInterval);
+            fruitInterval = setInterval(fruit, timeInterval);
         }
 
 
@@ -336,45 +326,40 @@
             c.src = "http://127.0.0.1:8000/video"
             console.log("执行到这里")
         }
-        function judge_score(data,str1,str2)
-        {
+
+        function judge_score(data, str1, str2) {
             var box0 = document.getElementById('fruit0');
             console.log(box0.style)
             var box1 = document.getElementById('fruit1');
             var box2 = document.getElementById('fruit2');
             var box3 = document.getElementById('fruit3');
-            var all_box = [box0,box1,box2,box3]
-            for(let i = 0;i<4;i++)
-            {
+            var all_box = [box0, box1, box2, box3]
+            for (let i = 0; i < 4; i++) {
                 var right_num = 0
                 console.log(all_box[i].style)
                 console.log(all_box[i])
-                if(all_box[i].style.display==="block")
-                {
-                    for(let j=0;j<10;j++)
-                    {
+                if (all_box[i].style.display === "block") {
+                    for (let j = 0; j < 10; j++) {
                         console.log("开始执行")
 
                         var p2_x = data["list"][j][str1]
                         var p2_y = data["list"][j][str2]
-                        box_left = Number(all_box[i].style.left.slice(0,all_box[i].style.left.length-2))
-                        box_top = Number(all_box[i].style.top.slice(0,all_box[i].style.left.length-2))
+                        box_left = Number(all_box[i].style.left.slice(0, all_box[i].style.left.length - 2))
+                        box_top = Number(all_box[i].style.top.slice(0, all_box[i].style.left.length - 2))
                         console.log(box_left)
                         console.log(box_top)
-                        console.log(box_left+100)
-                        console.log(box_top+100)
+                        console.log(box_left + 100)
+                        console.log(box_top + 100)
                         console.log(p2_x)
                         console.log(p2_y)
-                        if(p2_x>box_left&&p2_x<box_left+100&&p2_y>box_top-30&&p2_y<box_top+100)
-                        {
+                        if (p2_x > box_left && p2_x < box_left + 100 && p2_y > box_top - 30 && p2_y < box_top + 100) {
                             all_box[i].style.display = "none"
-                            right_num = right_num+1
+                            right_num = right_num + 1
                             console.log(right_num)
                         }
                     }
-                    if(right_num>0)
-                    {
-                        score = score+1
+                    if (right_num > 0) {
+                        score = score + 1
                         score_text.innerText = score;
 
                     }

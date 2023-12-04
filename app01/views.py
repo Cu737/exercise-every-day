@@ -14,11 +14,11 @@ from io import BytesIO
 from app01.models import UserInfo
 from collections import deque
 
-
 q_left = deque(maxlen=10)
 left_flag = 0
 q_right = deque(maxlen=10)
 right_flag = 0
+user = {'username': "form.cleaned_data['username']"}
 
 
 def image_code(request):
@@ -83,7 +83,6 @@ class SignupForm(forms.Form):
     #     pwd = self.cleaned_data.get("password")
     #     return md5(pwd)
 
-
 def login(request):
     """登录"""
     if request.method == "GET":
@@ -94,10 +93,13 @@ def login(request):
         return redirect('/signup/')
 
     form = LoginForm(data=request.POST)
+
     if form.is_valid():
         # 验证成功, 获取到的用户名和密码
-        # print(form.cleaned_data)
 
+        # 拿到用户名，便于后续显示
+        global user
+        user = {'username': form.cleaned_data['username']}
         # 验证码的校验
         user_input_code = form.cleaned_data.pop('code')
         image_code = request.session.get('image_code', "")
@@ -121,11 +123,13 @@ def login(request):
         return redirect("/index/home")
     return redirect('/login')
 
-def index_home(request):
 
+def index_home(request):
     if request.method == 'GET':
         # 处理 GET 请求的逻辑
-        return render(request, "home.html")
+        return render(request, "home.html", {'user':user})
+
+
 def index_ranking(request):
     print("aa")
     top_three_users = UserInfo.objects.order_by('-max_score')[:3]
@@ -136,8 +140,7 @@ def index_ranking(request):
     # ]
     print("aa")
     print(top_three_users)
-    return render(request, 'ranking.html', {'top_three_users': top_three_users})
-
+    return render(request, 'ranking.html', {'top_three_users': top_three_users,'user':user})
 
 
 def signup(request):
@@ -164,8 +167,6 @@ def signup(request):
     return redirect('/signup/')
 
 
-
-
 def game(request):
     global left_flag
     global right_flag
@@ -173,14 +174,14 @@ def game(request):
     if (left_flag == 1) and request.method == "POST":
         print("发送左")
         left_flag = 0
-        return JsonResponse({"list":list(q_left)})
+        return JsonResponse({"list": list(q_left)})
     if (right_flag == 1) and request.method == "POST":
         print("发送右")
         right_flag = 0
-        return JsonResponse({"list":list(q_right)})
+        return JsonResponse({"list": list(q_right)})
 
     if request.method == "GET":
-        return render(request, "game.html")
+        return render(request, "game.html",{'user':user})
     return HttpResponse()
 
 
@@ -250,7 +251,3 @@ def video(request):
 
     # 使用StreamingHttpResponse类传输视频流，content_type为'multipart/x-mixed-replace; boundary=frame'
     return StreamingHttpResponse(gen_display(camera), content_type='multipart/x-mixed-replace; boundary=frame')
-
-
-
-
