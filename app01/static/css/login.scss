@@ -6,7 +6,7 @@
 .box {
     width: 100vw;
     height: 100vh;
-    background-color: rgb(29, 67, 89);
+      background-image:linear-gradient(90deg, #D2DEED, #F4DBC7);
     .content {
         .login-wrapper {
             h1 {
@@ -86,7 +86,7 @@
 /*一般大于手机的尺寸CSS*/
 @media (min-width: 767px) {
     .box {
-        background-color: rgb(29, 67, 89);
+      background-image:linear-gradient(90deg, #D2DEED, #F4DBC7);
         .content {
             width: 85vw;
             height: 90vh;
