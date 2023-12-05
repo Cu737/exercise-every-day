@@ -9,11 +9,11 @@
     <!-- 图标组件库 -->
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
     <script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
-    <link rel="stylesheet" href="{% static 'css/iindex.css' %}">
 
+
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
     {% block page-css %}
     <link class="homecss" rel="stylesheet" href="{% static 'css/home.css' %}">
-
     {% endblock %}
     <title>Document</title>
 </head>
@@ -100,14 +100,14 @@
 
     {% block content %}
         <div class="content-object">
-                {% include 'home.html' %}
+            {% include 'home.html' %}
         </div>
     {% endblock %}
 </section>
 {#<script src="{% static 'js/index_script.js' %}" data-homedarkcss="{% static 'css/home_dark.css' %}"></script>#}
 <script>
-  var homedarkcssPath = "{% static 'css/home_dark.css' %}";
-  var homecssPath = "{% static 'css/home.css' %}";
+    var homedarkcssPath = "{% static 'css/home_dark.css' %}";
+    var homecssPath = "{% static 'css/home.css' %}";
 </script>
 <script src="{% static 'js/index_script.js' %}"></script>
 {% block page-js %}

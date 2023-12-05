@@ -5,9 +5,6 @@
     <title>天天运动</title>
     <link rel="stylesheet" href="{% static 'css/game.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-{#    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">#}
-
-
     <style>
         .fruit {
             display: inline-block;
@@ -38,7 +35,7 @@
 {% block content %}
     {#    该盒子数量应该随着可支持运动数量灵活变通。#}
     <div class="content"
-         style="position:relative;width: 850px;height:600px;background-color: white;margin-top: 50px;margin-left: 50px;border-radius: 15px;background-color: rgba(255, 255, 255, 0.75);">
+         style="position:relative;width: 850px;height:600px;background-color: white;margin-top: 100px;margin-left: 450px;border-radius: 15px;background-color: rgba(255, 255, 255, 0.75);">
         <div style="display:inline-block;float:left;margin-left: 10px;margin-top: 50px;width:650px;height:500px;">
             <iframe id="game-video" src="{% static 'image/2fruit.png' %}" width="650" height="500"></iframe>
         </div>
@@ -66,7 +63,7 @@
             </div>
             <div style="display: inline-block;margin-top:10px;margin-left:10px;height:150px;width:150px;background-color: transparent">
                 <div class="time" style="margin-top:30px;margin-left: 37px;">3:00</div>
-{#                btn btn-primary#}
+                {#                btn btn-primary#}
                 <button type="submit" id="start-btn" class="btn btn-primary" onclick="start_game()" style="margin-top:12px;margin-left: 45px;--bs-btn-hover-bg: rgb(241,181,162);
     --bs-btn-hover-border-color: rgb(241,181,162)">开始
                 </button>
@@ -97,6 +94,19 @@
 
         })
 
+        function getCookie(name) {
+            var cookieName = name + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var cookieArray = decodedCookie.split(';');
+            for (var i = 0; i < cookieArray.length; i++) {
+                var cookie = cookieArray[i].trim();
+                if (cookie.indexOf(cookieName) === 0) {
+                    return cookie.substring(cookieName.length, cookie.length);
+                }
+            }
+            return null;
+        }
+
         // 定义一个函数开始倒计时
         function startTimer() {
             timeInterval = 20;
@@ -104,7 +114,6 @@
             score = 0;
 
             // 每隔一秒执行一次updateTimer函数
-
             if (flag === false) {
                 seconds = 180;
 
@@ -135,8 +144,24 @@
                 flag = false;
                 clearInterval(interval);
                 clearInterval(fruitInterval);
-                console.log(score);
+                console.log("结果是" + score);
                 {#在这里实现将更新score#}
+                // 发起 Ajax 请求
+                var xhr = new XMLHttpRequest();  // 创建 XMLHttpRequest 对象
+                xhr.open("POST", "/update-score/", true);  // 发送 POST 请求到 /update-score/
+                // 添加 CSRF 令牌到请求头
+                var csrftoken = getCookie('csrftoken');  // 获取 CSRF 令牌
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);  // 将 CSRF 令牌设置为请求头的 X-CSRFToken 字段
+                xhr.setRequestHeader("Content-type", "application/json");  // 设置请求头为 JSON 格式
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        console.log("Score updated successfully!");  // 打印请求成功的消息到控制台
+                    }
+                };
+                var data = {
+                    newScore: score  // 要更新的新分数
+                };
+                xhr.send(JSON.stringify(data));  // 发送包含用户名和新分数的 JSON 数
             }
         }
 

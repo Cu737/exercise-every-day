@@ -28,5 +28,6 @@ urlpatterns = [
     path('image/code/', views.image_code),
     path('logout/', views.logout),
     path('video/',views.video),
+    path('update-score/',views.update_score),
    # path('index/ranking/', views.top_three_scores, name='top_three_scores')
 ]

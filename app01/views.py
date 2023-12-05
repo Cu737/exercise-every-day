@@ -18,7 +18,7 @@ q_left = deque(maxlen=10)
 left_flag = 0
 q_right = deque(maxlen=10)
 right_flag = 0
-user = {'username': "form.cleaned_data['username']"}
+user = {'username': ""}
 
 
 def image_code(request):
@@ -83,6 +83,7 @@ class SignupForm(forms.Form):
     #     pwd = self.cleaned_data.get("password")
     #     return md5(pwd)
 
+
 def login(request):
     """登录"""
     if request.method == "GET":
@@ -127,7 +128,7 @@ def login(request):
 def index_home(request):
     if request.method == 'GET':
         # 处理 GET 请求的逻辑
-        return render(request, "home.html", {'user':user})
+        return render(request, "home.html", {'user': user})
 
 
 def index_ranking(request):
@@ -140,7 +141,7 @@ def index_ranking(request):
     # ]
     print("aa")
     print(top_three_users)
-    return render(request, 'ranking.html', {'top_three_users': top_three_users,'user':user})
+    return render(request, 'ranking.html', {'top_three_users': top_three_users, 'user': user})
 
 
 def signup(request):
@@ -181,7 +182,7 @@ def game(request):
         return JsonResponse({"list": list(q_right)})
 
     if request.method == "GET":
-        return render(request, "game.html",{'user':user})
+        return render(request, "game.html", {'user': user})
     return HttpResponse()
 
 
@@ -251,3 +252,26 @@ def video(request):
 
     # 使用StreamingHttpResponse类传输视频流，content_type为'multipart/x-mixed-replace; boundary=frame'
     return StreamingHttpResponse(gen_display(camera), content_type='multipart/x-mixed-replace; boundary=frame')
+
+
+from django.http import JsonResponse
+import json
+
+
+def update_score(request):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        data = json.loads(body_unicode)
+        new_score = data['newScore']
+        print(new_score)
+        # 在这里进行更新分数的逻辑
+        try:
+            user_info = UserInfo.objects.get(username=user['username'])
+            if user_info.max_score < new_score:
+                user_info.max_score = new_score
+                user_info.save()
+            return JsonResponse({'message': 'Score updated successfully.'})
+        except UserInfo.DoesNotExist:
+            return JsonResponse({'error': 'User not found.'}, status=404)
+    else:
+        return JsonResponse({'error': 'Invalid request method.'}, status=400)
