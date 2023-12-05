@@ -1,4 +1,5 @@
 import mediapipe as mp
+import numpy as np
 from django.shortcuts import render, redirect
 import cv2
 from django.http import StreamingHttpResponse, JsonResponse
@@ -195,48 +196,89 @@ def logout(request):
     return redirect("/login/")
 
 
+def calculate_angle(a, b, c):
+    a = np.array(a)  # First
+    b = np.array(b)  # Mid
+    c = np.array(c)  # End
+
+    radians = np.arctan2(c[1] - b[1], c[0] - b[0]) - np.arctan2(a[1] - b[1], a[0] - b[0])
+    angle = np.abs(radians * 180.0 / np.pi)
+
+    if angle > 180.0:
+        angle = 360 - angle
+
+    return angle
+
 def gen_display(camera):
     global left_flag
     global right_flag
     mp_draw = mp.solutions.drawing_utils
     mp_hands = mp.solutions.hands
     hands = mp_hands.Hands(max_num_hands=2)
+
+    mp_pose = mp.solutions.pose
+    pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
+    counter = 0
+    stage = None
+    max_angle = 160
+    min_angle = 60
+
     # 循环读取摄像头的画面
     while True:
-
         # 读取一帧图片
         ret, frame = camera.read()
         frame = cv2.flip(frame, 1)
+
         if ret:
             # 将图片进行编码
-
             frameRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            results = hands.process(frameRGB)
 
-            if results.multi_hand_landmarks:
-
-                for hand_landmarks in results.multi_hand_landmarks:
-                    handedness = results.multi_handedness[0]
-                    # print(handedness.classification[0].label)
-                    # 关键点可视化
+            # 手部检测
+            hands_results = hands.process(frameRGB)
+            if hands_results.multi_hand_landmarks:
+                for hand_landmarks in hands_results.multi_hand_landmarks:
+                    handedness = hands_results.multi_handedness[0]
                     mp_draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
                     if handedness.classification[0].label == 'Left':
-
-                        # 输出中指尖的坐标
-                        # print("左")
-                        # print(hand_landmarks.landmark[12].x)
                         q_left.append({"left_x": hand_landmarks.landmark[8].x * 650,
-                                       "left_y": hand_landmarks.landmark[8].y * 500}
-                                      )
+                                       "left_y": hand_landmarks.landmark[8].y * 500})
                         left_flag = 1
                     else:
                         q_right.append({"right_x": hand_landmarks.landmark[8].x * 650,
-                                        "right_y": hand_landmarks.landmark[8].y * 500}
-                                       )
+                                        "right_y": hand_landmarks.landmark[8].y * 500})
                         right_flag = 1
 
-            ret, frame = cv2.imencode('.jpeg', frame)
+            # 俯卧撑检测
+            pose_results = pose.process(frameRGB)
+            if pose_results.pose_landmarks:
+                landmarks = pose_results.pose_landmarks.landmark
+                # 获得坐标
+                shoulder = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,
+                            landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
+                elbow = [landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value].x,
+                         landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value].y]
+                wrist = [landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].x,
+                         landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].y]
+                angle = calculate_angle(shoulder, elbow, wrist)
 
+                # 俯卧撑计数器
+                if angle > max_angle and stage != 'down':
+                    stage = "up"
+                if angle > max_angle and stage == 'down':
+                    stage = "up"
+                    counter += 1
+                    print(counter)
+                if angle < min_angle and stage == 'up':
+                    stage = "down"
+
+                    # 绘制出关键点的连接线
+                mp_draw.draw_landmarks(frame, pose_results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
+                                          mp_draw.DrawingSpec(color=(245, 117, 66), thickness=2,circle_radius=2),
+                                          mp_draw.DrawingSpec(color=(245, 66, 230), thickness=2, circle_radius=2))
+
+
+            # 编码并传输视频流
+            ret, frame = cv2.imencode('.jpeg', frame)
             if ret:
                 # 转换为字节类型，并存储在迭代器中
                 yield (b'--frame\r\n'
@@ -252,6 +294,7 @@ def video(request):
 
     # 使用StreamingHttpResponse类传输视频流，content_type为'multipart/x-mixed-replace; boundary=frame'
     return StreamingHttpResponse(gen_display(camera), content_type='multipart/x-mixed-replace; boundary=frame')
+
 
 
 from django.http import JsonResponse
