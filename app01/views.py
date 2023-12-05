@@ -15,11 +15,11 @@ from io import BytesIO
 from app01.models import UserInfo
 from collections import deque
 
-
 q_left = deque(maxlen=10)
 left_flag = 0
 q_right = deque(maxlen=10)
 right_flag = 0
+user = {'username': ""}
 
 
 def image_code(request):
@@ -95,10 +95,13 @@ def login(request):
         return redirect('/signup/')
 
     form = LoginForm(data=request.POST)
+
     if form.is_valid():
         # 验证成功, 获取到的用户名和密码
-        # print(form.cleaned_data)
 
+        # 拿到用户名，便于后续显示
+        global user
+        user = {'username': form.cleaned_data['username']}
         # 验证码的校验
         user_input_code = form.cleaned_data.pop('code')
         image_code = request.session.get('image_code', "")
@@ -122,11 +125,13 @@ def login(request):
         return redirect("/index/home")
     return redirect('/login')
 
-def index_home(request):
 
+def index_home(request):
     if request.method == 'GET':
         # 处理 GET 请求的逻辑
-        return render(request, "home.html")
+        return render(request, "home.html", {'user': user})
+
+
 def index_ranking(request):
     print("aa")
     top_three_users = UserInfo.objects.order_by('-max_score')[:3]
@@ -137,8 +142,7 @@ def index_ranking(request):
     # ]
     print("aa")
     print(top_three_users)
-    return render(request, 'ranking.html', {'top_three_users': top_three_users})
-
+    return render(request, 'ranking.html', {'top_three_users': top_three_users, 'user': user})
 
 
 def signup(request):
@@ -165,8 +169,6 @@ def signup(request):
     return redirect('/signup/')
 
 
-
-
 def game(request):
     global left_flag
     global right_flag
@@ -174,14 +176,14 @@ def game(request):
     if (left_flag == 1) and request.method == "POST":
         print("发送左")
         left_flag = 0
-        return JsonResponse({"list":list(q_left)})
+        return JsonResponse({"list": list(q_left)})
     if (right_flag == 1) and request.method == "POST":
         print("发送右")
         right_flag = 0
-        return JsonResponse({"list":list(q_right)})
+        return JsonResponse({"list": list(q_right)})
 
     if request.method == "GET":
-        return render(request, "game.html")
+        return render(request, "game.html", {'user': user})
     return HttpResponse()
 
 
@@ -295,3 +297,24 @@ def video(request):
 
 
 
+from django.http import JsonResponse
+import json
+
+
+def update_score(request):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        data = json.loads(body_unicode)
+        new_score = data['newScore']
+        print(new_score)
+        # 在这里进行更新分数的逻辑
+        try:
+            user_info = UserInfo.objects.get(username=user['username'])
+            if user_info.max_score < new_score:
+                user_info.max_score = new_score
+                user_info.save()
+            return JsonResponse({'message': 'Score updated successfully.'})
+        except UserInfo.DoesNotExist:
+            return JsonResponse({'error': 'User not found.'}, status=404)
+    else:
+        return JsonResponse({'error': 'Invalid request method.'}, status=400)

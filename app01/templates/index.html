@@ -12,9 +12,11 @@
 
 
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
-    <link class="homecss" rel="stylesheet" href="{% static 'css/home.css' %}">
 
- {% block extra_css %}{% endblock %}
+    {% block page-css %}
+
+    <link class="homecss" rel="stylesheet" href="{% static 'css/home.css' %}">
+    {% endblock %}
     <title>Document</title>
 </head>
 
@@ -27,8 +29,10 @@
                     <img src="{% static 'image/avatar.JPG' %}">
                 </span>
             <div class="text logo-text">
-                <span class="name">Phoenix</span>
-                <span class="profession">Web Developer</span>
+                <span class="name">
+                    {{ user.username }}
+                </span>
+                <span class="profession">Life is just a peeling!</span>
             </div>
         </div>
 
@@ -98,17 +102,19 @@
 
     {% block content %}
         <div class="content-object">
-                {% include 'home.html' %}
+            {% include 'home.html' %}
         </div>
     {% endblock %}
 </section>
 {#<script src="{% static 'js/index_script.js' %}" data-homedarkcss="{% static 'css/home_dark.css' %}"></script>#}
 <script>
-  var homedarkcssPath = "{% static 'css/home_dark.css' %}";
-  var homecssPath = "{% static 'css/home.css' %}";
+    var homedarkcssPath = "{% static 'css/home_dark.css' %}";
+    var homecssPath = "{% static 'css/home.css' %}";
 </script>
 <script src="{% static 'js/index_script.js' %}"></script>
+{% block page-js %}
 
+{% endblock %}
 </body>
 
 </html>
