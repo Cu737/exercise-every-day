@@ -140,9 +140,9 @@ def index_ranking(request):
     #     {'username': 'user2', 'max_score': 90},
     #     {'username': 'user3', 'max_score': 80},
     # ]
-    print("aa")
+    top_three_fwcers=UserInfo.objects.order_by('-fwc_score')[:3]
     print(top_three_users)
-    return render(request, 'ranking.html', {'top_three_users': top_three_users, 'user': user})
+    return render(request, 'ranking.html', {'top_three_users': top_three_users, 'user': user,'fwcer':top_three_fwcers})
 
 
 def signup(request):
@@ -187,6 +187,18 @@ def game(request):
     return HttpResponse()
 
 
+
+def fwc_view(request):
+    return render(request, 'fwc.html')
+
+
+
+
+
+
+
+
+
 def logout(request):
     """ 退出登录 """
 
@@ -209,6 +221,12 @@ def calculate_angle(a, b, c):
 
     return angle
 
+
+def get_counter_data(request):
+    global counter
+    return JsonResponse({'counter': counter})
+
+
 def gen_display(camera):
     global left_flag
     global right_flag
@@ -218,7 +236,8 @@ def gen_display(camera):
 
     mp_pose = mp.solutions.pose
     pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
-    counter = 0
+    global counter
+    counter=0
     stage = None
     max_angle = 160
     min_angle = 60

@@ -23,11 +23,18 @@
                             <br>
                             <p>——排行榜——
                             </p>
-                            <h1>Top Three Users</h1>
+                            <h2>Top Three Users Of Fruit Slice Challenge</h2>
                             
                             <ul>
                                 {% for user in top_three_users %}
                                     <li>{{ user.username }} - {{ user.max_score }}</li>
+                                {% endfor %}
+                            </ul>
+
+                            <h2>Top Three Users Of Push-up</h2>
+                            <ul>
+                                {% for user in fwcer %}
+                                    <li>{{ user.username }} - {{ user.fwc_score }}</li>
                                 {% endfor %}
                             </ul>
                             
@@ -40,7 +47,7 @@
         </div>
 
 
-        <a href="#" class="btn">START<span><i></i></span></a>
+        
 
         <div>
 
