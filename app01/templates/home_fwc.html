@@ -1,13 +1,8 @@
 {% extends "index.html" %}
 {% load static %}
-  {% block page-css %}
-       <link href="//netdna.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
-          <link class="homecss" rel="stylesheet" href="{% static 'css/home.css' %}">
-
-    {% endblock %}
 
 {% block content %}
-
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
 
     <div>
@@ -16,28 +11,15 @@
                 <div class="swiper-slide slide01">
                     <div class="slideContent">
                         <div class="slideInfo">
-                            <h1>RANKING!</h1>
+                            <h1>Push-up Challenge!</h1>
                             <br>
                             <br>
                             <br>
                             <br>
-                            <p>——排行榜——
+                            <p>
+                                Do your best and surpass yourself!
                             </p>
-                            <h2>Top Three Users Of Fruit Slice Challenge</h2>
-                            
-                            <ul>
-                                {% for user in top_three_users %}
-                                    <li>{{ user.username }} - {{ user.max_score }}</li>
-                                {% endfor %}
-                            </ul>
 
-                            <h2>Top Three Users Of Push-up</h2>
-                            <ul>
-                                {% for user in fwcer %}
-                                    <li>{{ user.username }} - {{ user.fwc_score }}</li>
-                                {% endfor %}
-                            </ul>
-                            
                         </div>
 
                     </div>
@@ -47,37 +29,17 @@
         </div>
 
 
-        
+        <a href="/fwc" class="btn">START<span><i></i></span></a>
 
         <div>
 
 
             <div class="juice">
-                <img src="{% static 'image/sc.png' %}" alt="">
-
+                <img src="{% static 'image/fwc.png' %}" alt="">
             </div>
-
-            <div class="leaves">
-                <ul id="scene">
-                    <li class="layer" data-depth="-.1">
-                        <img src="{% static 'image/leaf01.png' %}" alt="">
-                    </li>
-                    <li class="layer" data-depth="-.3">
-                        <img src="{% static 'image/leaf02.png' %}" alt="">
-                    </li>
-                    <li class="layer" data-depth="-1.5">
-                        <img src="{% static 'image/leaf03.png' %}" alt="">
-                    </li>
-                    <li class="layer" data-depth=".1">
-                        <img src="{% static 'image/leaf04.png' %}" alt="">
-                    </li>
-                    <li class="layer" data-depth=".3">
-                        <img src="{% static 'image/leaf05.png' %}" alt="">
-                    </li>
-                </ul>
+            <div style="position: absolute; bottom: 50px; right: 50px;">
+                <img src="{% static 'image/dumbbell1.png' %}" alt="" style="width: 200px; height: 200px;">
             </div>
-
-
         </div>
     </div>
 
@@ -95,7 +57,7 @@
         {#    opacity: 0,#}
         {#    x: -20,#}
         {#    ease: Power3.easeInOut#}
-        {#}, 0.08)#}
+        //}, 0.08)
 
         TweenMax.from(".search", 1, {
             delay: .5,
@@ -116,7 +78,7 @@
         {#    opacity: 0,#}
         {#    x: -20,#}
         {#    ease: Expo.easeInOut#}
-        {#})#}
+        //})
 
         TweenMax.from(".juice", 1, {
             delay: 2,

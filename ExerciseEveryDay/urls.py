@@ -22,6 +22,7 @@ urlpatterns = [
     # 转入登录界面
     path('login/', views.login, name='login'),
     path('index/home/', views.index_home, name='index_home'),
+    path('index/home_fwc/', views.index_home_fwc, name='index_home_fwc'),
     path('index/ranking/', views.index_ranking, name='index_ranking'),
     path('game/', views.game),
     path('signup/', views.signup, name='signup'),
@@ -29,5 +30,7 @@ urlpatterns = [
     path('logout/', views.logout),
     path('video/',views.video),
     path('update-score/',views.update_score),
+    path('fwc/', views.fwc_view),
+    path('get_counter_data/', views.get_counter_data, name='get_counter_data'),
    # path('index/ranking/', views.top_three_scores, name='top_three_scores')
 ]

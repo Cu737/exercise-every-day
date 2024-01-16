@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>俯卧撑计数器</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to right, #6dd5ed, #2193b0);  /* 添加渐变背景色 */
+            font-family: Arial, sans-serif;
+        }
+
+        #video-feed {
+            max-width: 600px;  /* 视频最大宽度 */
+            height: auto;
+            border: 3px solid #fff;  /* 添加白色边框 */
+            border-radius: 8px;
+        }
+
+        #counter-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;  /* 间隙 */
+        }
+
+        #counter {
+            font-size: 2em;
+            color: #fff;  /* 白色字体 */
+        }
+
+        h1 {
+            color: #fff;
+            position: absolute;
+            top: 20px;
+        }
+    </style>
+</head>
+<body>
+    
+    <h1>俯卧撑计数器</h1>
+    <div id="counter-container">
+        <img src="/video/" id="video-feed" alt="Video feed">
+        <div id="counter">0</div>
+    </div>
+
+    <script>
+        function updateCounter() {
+            fetch('/get_counter_data/')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('counter').innerText = data.counter;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        setInterval(updateCounter, 1000);  // 每秒更新一次
+    </script>
+</body>
+</html>
