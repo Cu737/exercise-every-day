@@ -132,6 +132,12 @@ def index_home(request):
         return render(request, "home.html", {'user': user})
 
 
+def index_home_fwc(request):
+    if request.method == 'GET':
+        # 处理 GET 请求的逻辑
+        return render(request, "home_fwc.html", {'user': user})
+
+
 def index_ranking(request):
     print("aa")
     top_three_users = UserInfo.objects.order_by('-max_score')[:3]
