@@ -77,7 +77,7 @@
 
 .juice img {
     animation: float 4s ease-in-out infinite;
-    max-height: 600px;
+    max-height: 400px;
 }
 
 @keyframes float {
