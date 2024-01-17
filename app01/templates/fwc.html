@@ -11,97 +11,135 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-image: url("{% static 'image/fwc-bg.jpg' %}");
-            background-size: cover; /* 保持图片宽高比并覆盖整个屏幕 */
+            background-image: url("{% static 'image/bg_fwc01.png' %}");
+            background-size: cover;
             font-family: Arial, sans-serif;
         }
 
+        .time {
+            color: rgb(234, 191, 176);
+            font-size: 34px;
+            font-weight: bolder;
+        }
+
         #video-feed {
-            max-width: 1000px;
-            height: auto;
+            max-width: 640px;
+            height: 505px;
             border: 3px solid #fff;
             border-radius: 8px;
             margin: auto;
         }
 
-        #counter-container {
+        .content {
+            position: relative;
+            width: 850px;
+            height: 600px;
+            margin-top: 110px;
+            margin-left: 290px;
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0.75);
+            background-size: cover;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
+            justify-content: space-between;
+            padding: 20px;
+        }
 
+        .time-box {
+            display: inline-block;
+            margin-top: 50px;
+            margin-left: 10px;
+            height: 150px;
+            width: 150px;
+            background-color: transparent;
+        }
+
+        .time {
+            margin-top: 30px;
+            margin-left: 37px;
         }
 
         #counter {
-            font-size: 2em;
+            font-size: 40px;
             color: #fff;
-
         }
 
-        h1 {
+        #start-btn {
+            margin-top: 12px;
+            margin-left: 45px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: rgb(241, 181, 162);
             color: #fff;
-            position: absolute;
-            top: 20px;
+            border: 1px solid transparent;
+            border-radius: 5px;
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+        }
+
+        #start-btn:hover {
+            background-color: #fff;
+            color: rgb(241, 181, 162);
+            border: 1px solid rgb(241, 181, 162);
         }
     </style>
-
 {% endblock %}
 
-
 {% block content %}
-    <div id="counter-container">
-        <img src="/fwc_video/" id="video-feed" alt="Video feed">
-        <div id="counter">0</div>
+    <div class="content">
+        <div style="display:inline-block;float:left;width:645px;height:510px;">
+            <iframe id="video-feed" width="640" height="505"></iframe>
+        </div>
+        <div>
+            <div class="time-box">
+                <div class="time">得分</div>
+                <div class="time" id="counter">0</div>
+            </div>
+            <div class="time-box">
+                <div class="time">时间</div>
+                <span class="time" id="timer">180</span><span class="time">s</span>
+                <button type="submit" id="start-btn" class="start-btn" onclick="start_game_fwc()">开始</button>
+            </div>
+        </div>
     </div>
 {% endblock %}
 
 {% block page-js %}
     <script>
+        var timerInterval; // Variable to store the timer interval
+        var timeLeft = 180; // Initial time
+
+        function start_game_fwc() {
+            var d = document.getElementById("video-feed");
+            d.src = "http://127.0.0.1:8000/fwc_video";
+            timeLeft = 180; // Reset the timer
+            updateCounterAndTime(); // Update counter and time immediately
+            timerInterval = setInterval(updateCounterAndTime, 1000); // Update every second
+            console.log("执行到这里");
+        }
+
+        function updateCounterAndTime() {
+            updateCounter(); // Update the counter (assuming updateCounter is defined)
+            var timerElement = document.getElementById("timer");
+            timeLeft -= 1; // Decrement time
+            timerElement.innerText = timeLeft; // Update the timer element
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval); // Stop the timer when time is up
+                // Additional actions when the timer reaches 0 can be added here
+            }
+        }
+
         function updateCounter() {
+            // Your existing updateCounter function logic here
             fetch('/get_counter_data/')
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('counter').innerText = data.counter;
                 })
                 .catch(error => console.error('Error:', error));
-
         }
-    function updateCounter() {
-        // 2. 使用 fetch 发起 Ajax 请求
-        fetch('/get_counter_data/')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('counter').innerText = data.counter;
 
-                // 在成功获取 counter 数据后再发起 update-fwc-score 请求
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "/update-fwc-score/", true);
+        // Additional functions or code related to your existing script
 
-                // 添加 CSRF 令牌到请求头
-                var csrftoken = getCookie('csrftoken');
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                xhr.setRequestHeader("Content-type", "application/json");
-
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === 4) {
-                        if (xhr.status === 200) {
-                            console.log("Score updated successfully!");
-                        } else {
-                            console.error('Error updating score:', xhr.statusText);
-                        }
-                    }
-                };
-
-                var data1 = {
-                    newScore: data.counter  // 使用获取的 counter 数据更新新分数
-                };
-
-                xhr.send(JSON.stringify(data1));
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-    setInterval(updateCounter, 300);
+        setInterval(updateCounter, 200);
     </script>
 {% endblock %}
-
