@@ -30,6 +30,7 @@ urlpatterns = [
     path('logout/', views.logout),
     path('video/',views.video),
     path('update-score/',views.update_score),
+    path('update-fwc-score/',views.update_fwc_score),
     path('fwc/', views.fwc_view),
     path('get_counter_data/', views.get_counter_data, name='get_counter_data'),
    # path('index/ranking/', views.top_three_scores, name='top_three_scores')
