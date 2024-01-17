@@ -148,9 +148,11 @@
     padding-top: 12px;
 }
 /*///////////////////*/
-.contents{
-      background-image:linear-gradient(90deg, #D2DEED, #F4DBC7);
+.contents {
+    background-image: url('../image/水果忍者.jpg'); /* 替换为实际的图片路径 */
+    background-size: cover;
 }
+
 
 
 .btn {
