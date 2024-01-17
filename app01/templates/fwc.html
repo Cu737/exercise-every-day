@@ -29,11 +29,13 @@
             align-items: center;
             justify-content: center;
             gap: 20px;
+
         }
 
         #counter {
             font-size: 2em;
             color: #fff;
+
         }
 
         h1 {
@@ -42,6 +44,7 @@
             top: 20px;
         }
     </style>
+
 {% endblock %}
 
 
@@ -61,8 +64,44 @@
                     document.getElementById('counter').innerText = data.counter;
                 })
                 .catch(error => console.error('Error:', error));
-        }
 
-        setInterval(updateCounter, 300);
+        }
+    function updateCounter() {
+        // 2. 使用 fetch 发起 Ajax 请求
+        fetch('/get_counter_data/')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('counter').innerText = data.counter;
+
+                // 在成功获取 counter 数据后再发起 update-fwc-score 请求
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/update-fwc-score/", true);
+
+                // 添加 CSRF 令牌到请求头
+                var csrftoken = getCookie('csrftoken');
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                xhr.setRequestHeader("Content-type", "application/json");
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            console.log("Score updated successfully!");
+                        } else {
+                            console.error('Error updating score:', xhr.statusText);
+                        }
+                    }
+                };
+
+                var data1 = {
+                    newScore: data.counter  // 使用获取的 counter 数据更新新分数
+                };
+
+                xhr.send(JSON.stringify(data1));
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    setInterval(updateCounter, 300);
     </script>
 {% endblock %}
+

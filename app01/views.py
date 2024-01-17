@@ -370,3 +370,22 @@ def update_score(request):
             return JsonResponse({'error': 'User not found.'}, status=404)
     else:
         return JsonResponse({'error': 'Invalid request method.'}, status=400)
+
+
+def update_fwc_score(request):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        data = json.loads(body_unicode)
+        new_score = data['newScore']
+        print(new_score)
+        # 在这里进行更新分数的逻辑
+        try:
+            user_info = UserInfo.objects.get(username=user['username'])
+            if user_info.fwc_score < new_score:
+                user_info.fwc_score = new_score
+                user_info.save()
+            return JsonResponse({'message': 'Score updated successfully.'})
+        except UserInfo.DoesNotExist:
+            return JsonResponse({'error': 'User not found.'}, status=404)
+    else:
+        return JsonResponse({'error': 'Invalid request method.'}, status=400)
