@@ -1,7 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+{% extends 'index.html' %}
+{% load static %}
+
+{% block page-css %}
     <title>俯卧撑计数器</title>
     <style>
         body {
@@ -11,27 +11,31 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(to right, #6dd5ed, #2193b0); /* 添加渐变背景色 */
+            background-image: url("{% static 'image/fwc-bg.jpg' %}");
+            background-size: cover; /* 保持图片宽高比并覆盖整个屏幕 */
             font-family: Arial, sans-serif;
         }
 
         #video-feed {
-            max-width: 600px; /* 视频最大宽度 */
+            max-width: 1000px;
             height: auto;
-            border: 3px solid #fff; /* 添加白色边框 */
+            border: 3px solid #fff;
             border-radius: 8px;
+            margin: auto;
         }
 
         #counter-container {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 20px; /* 间隙 */
+            gap: 20px;
+
         }
 
         #counter {
             font-size: 2em;
-            color: #fff; /* 白色字体 */
+            color: #fff;
+
         }
 
         h1 {
@@ -40,27 +44,27 @@
             top: 20px;
         }
     </style>
-</head>
-<body>
 
-<h1>俯卧撑计数器</h1>
-<div id="counter-container">
-    <img src="/video/" id="video-feed" alt="Video feed">
-    <div id="counter">0</div>
-</div>
+{% endblock %}
 
-<script>
-      function getCookie(name) {
-            var cookieName = name + "=";
-            var decodedCookie = decodeURIComponent(document.cookie);
-            var cookieArray = decodedCookie.split(';');
-            for (var i = 0; i < cookieArray.length; i++) {
-                var cookie = cookieArray[i].trim();
-                if (cookie.indexOf(cookieName) === 0) {
-                    return cookie.substring(cookieName.length, cookie.length);
-                }
-            }
-            return null;
+
+{% block content %}
+    <div id="counter-container">
+        <img src="/fwc_video/" id="video-feed" alt="Video feed">
+        <div id="counter">0</div>
+    </div>
+{% endblock %}
+
+{% block page-js %}
+    <script>
+        function updateCounter() {
+            fetch('/get_counter_data/')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('counter').innerText = data.counter;
+                })
+                .catch(error => console.error('Error:', error));
+
         }
     function updateCounter() {
         // 2. 使用 fetch 发起 Ajax 请求
@@ -97,8 +101,7 @@
             .catch(error => console.error('Error:', error));
     }
 
-    setInterval(updateCounter, 1000);
+    setInterval(updateCounter, 300);
+    </script>
+{% endblock %}
 
-</script>
-</body>
-</html>
