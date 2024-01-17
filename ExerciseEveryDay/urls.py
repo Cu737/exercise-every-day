@@ -29,6 +29,7 @@ urlpatterns = [
     path('image/code/', views.image_code),
     path('logout/', views.logout),
     path('video/',views.video),
+    path('fwc_video/',views.fwc_video),
     path('update-score/',views.update_score),
     path('fwc/', views.fwc_view),
     path('get_counter_data/', views.get_counter_data, name='get_counter_data'),

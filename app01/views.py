@@ -227,10 +227,11 @@ def calculate_angle(a, b, c):
 
     return angle
 
+fwc_counter = 0
 
 def get_counter_data(request):
-    global counter
-    return JsonResponse({'counter': counter})
+    global fwc_counter
+    return JsonResponse({'counter': fwc_counter})
 
 
 def gen_display(camera):
@@ -239,14 +240,6 @@ def gen_display(camera):
     mp_draw = mp.solutions.drawing_utils
     mp_hands = mp.solutions.hands
     hands = mp_hands.Hands(max_num_hands=2)
-
-    mp_pose = mp.solutions.pose
-    pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
-    global counter
-    counter=0
-    stage = None
-    max_angle = 160
-    min_angle = 60
 
     # 循环读取摄像头的画面
     while True:
@@ -273,6 +266,33 @@ def gen_display(camera):
                                         "right_y": hand_landmarks.landmark[8].y * 500})
                         right_flag = 1
 
+            # 编码并传输视频流
+            ret, frame = cv2.imencode('.jpeg', frame)
+            if ret:
+                # 转换为字节类型，并存储在迭代器中
+                yield (b'--frame\r\n'
+                       b'Content-Type: image/jpeg\r\n\r\n' + frame.tobytes() + b'\r\n')
+
+def fwc_display(camera):
+
+    mp_draw = mp.solutions.drawing_utils
+    mp_pose = mp.solutions.pose
+    pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
+    global fwc_counter
+    stage = None
+    max_angle = 160
+    min_angle = 60
+
+    # 循环读取摄像头的画面
+    while True:
+        # 读取一帧图片
+        ret, frame = camera.read()
+        frame = cv2.flip(frame, 1)
+
+        if ret:
+            # 将图片进行编码
+            frameRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
             # 俯卧撑检测
             pose_results = pose.process(frameRGB)
             if pose_results.pose_landmarks:
@@ -291,16 +311,15 @@ def gen_display(camera):
                     stage = "up"
                 if angle > max_angle and stage == 'down':
                     stage = "up"
-                    counter += 1
-                    print(counter)
+                    fwc_counter += 1
+                    print(fwc_counter)
                 if angle < min_angle and stage == 'up':
                     stage = "down"
 
                     # 绘制出关键点的连接线
                 mp_draw.draw_landmarks(frame, pose_results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
-                                          mp_draw.DrawingSpec(color=(245, 117, 66), thickness=2,circle_radius=2),
-                                          mp_draw.DrawingSpec(color=(245, 66, 230), thickness=2, circle_radius=2))
-
+                                       mp_draw.DrawingSpec(color=(245, 117, 66), thickness=2, circle_radius=2),
+                                       mp_draw.DrawingSpec(color=(245, 66, 230), thickness=2, circle_radius=2))
 
             # 编码并传输视频流
             ret, frame = cv2.imencode('.jpeg', frame)
@@ -320,7 +339,15 @@ def video(request):
     # 使用StreamingHttpResponse类传输视频流，content_type为'multipart/x-mixed-replace; boundary=frame'
     return StreamingHttpResponse(gen_display(camera), content_type='multipart/x-mixed-replace; boundary=frame')
 
+@xframe_options_exempt
+def fwc_video(request):
+    # 创建一个摄像头对象，参数为0表示使用电脑前置摄像头
+    camera = cv2.VideoCapture(0)
+    # 设置摄像头宽度值
+    camera.set(cv2.CAP_PROP_FRAME_WIDTH, 500)
 
+    # 使用StreamingHttpResponse类传输视频流，content_type为'multipart/x-mixed-replace; boundary=frame'
+    return StreamingHttpResponse(fwc_display(camera), content_type='multipart/x-mixed-replace; boundary=frame')
 
 from django.http import JsonResponse
 import json
