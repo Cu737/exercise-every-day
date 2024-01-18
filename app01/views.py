@@ -195,6 +195,8 @@ def game(request):
 
 
 def fwc_view(request):
+    global fwc_counter
+    fwc_counter=0
     return render(request, 'fwc.html')
 
 
