@@ -124,6 +124,8 @@
 
             if (timeLeft <= 0) {
                 clearInterval(timerInterval); // Stop the timer when time is up
+                var c = document.getElementById("video-feed");
+                c.src = "{% static 'image/gameoverpic.png' %}"
                 // Additional actions when the timer reaches 0 can be added here
             }
         }

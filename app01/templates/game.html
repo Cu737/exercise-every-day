@@ -37,22 +37,22 @@
     <div class="content"
          style="position:relative;width: 850px;height:600px;margin-top: 110px;margin-left: 290px;border-radius: 15px;background-color: rgba(255, 255, 255, 0.75); background-size: cover;">
         <div style="display:inline-block;float:left;margin-left: 10px;margin-top: 50px;width:650px;height:500px;">
-            <iframe id="game-video" src="{% static 'image/2fruit.png' %}" width="644" height="484"></iframe>
+            <iframe id="game-video"  width="644" height="484"></iframe>
         </div>
 
         <div class="draw" style="z-index: 5">
             <canvas id="myCanvas" width="650" height="500"></canvas>
         </div>
-        <div class="fruit" id="fruit0" style="display:block;position: absolute;top: 10px;left: 10px;">
+        <div class="fruit" id="fruit0" style="display:none;">
             <img src="{% static 'image/1fruit.png' %}" style="width:100px;height:100px;">
         </div>
-        <div class="fruit" id="fruit1" style="display:block;position: absolute;top: 10px;left: 10px;">
+        <div class="fruit" id="fruit1" style="display:none;">
             <img src="{% static 'image/2fruit.png' %}" style="width:100px;height:100px;">
         </div>
-        <div class="fruit" id="fruit2" style="display:block;position: absolute;top: 10px;left: 10px;">
+        <div class="fruit" id="fruit2" style="display:none;">
             <img src="{% static 'image/3fruit.png' %}" style="width:100px;height:100px;">
         </div>
-        <div class="fruit" id="fruit3" style="display:block;position: absolute;top: 10px;left: 10px;">
+        <div class="fruit" id="fruit3" style="display:none;">
             <img src="{% static 'image/4fruit.png' %}" style="width:100px;height:100px;">
         </div>
         <div>
@@ -105,6 +105,7 @@
         // 定义一个函数开始倒计时
 
         function startTimer() {
+
             timeInterval = 20;
 
             score = 0;
@@ -137,6 +138,16 @@
             // 更新页面中的倒计时
             timer.innerHTML = minutes + ":" + secondsLeft;
             if (seconds === 0) {
+                var box0 = document.getElementById('fruit0');
+                var box1 = document.getElementById('fruit1');
+                var box2 = document.getElementById('fruit2');
+                var box3 = document.getElementById('fruit3');
+                box0.style.display = "none"
+                box1.style.display = "none"
+                box2.style.display = "none"
+                box3.style.display = "none"
+                var c = document.getElementById("game-video");
+                c.src = "{% static 'image/gameoverpic.png' %}"
                 flag = false;
                 clearInterval(interval);
                 clearInterval(fruitInterval);
@@ -169,7 +180,6 @@
             for (var i = 0; i < numBoxes; i++) {
                 var fruit_name = "fruit" + i;
                 var box = document.getElementById(fruit_name);
-                //console.log(box)
                 box.style.display = "block"
             }
         }
@@ -356,26 +366,16 @@
             var all_box = [box0, box1, box2, box3]
             for (let i = 0; i < 4; i++) {
                 var right_num = 0
-                console.log(all_box[i].style)
-                console.log(all_box[i])
                 if (all_box[i].style.display === "block") {
                     for (let j = 0; j < 10; j++) {
-                        console.log("开始执行")
 
                         var p2_x = data["list"][j][str1]
                         var p2_y = data["list"][j][str2]
                         box_left = Number(all_box[i].style.left.slice(0, all_box[i].style.left.length - 2))
                         box_top = Number(all_box[i].style.top.slice(0, all_box[i].style.left.length - 2))
-                        console.log(box_left)
-                        console.log(box_top)
-                        console.log(box_left + 100)
-                        console.log(box_top + 100)
-                        console.log(p2_x)
-                        console.log(p2_y)
                         if (p2_x > box_left && p2_x < box_left + 100 && p2_y > box_top - 30 && p2_y < box_top + 100) {
                             all_box[i].style.display = "none"
                             right_num = right_num + 1
-                            console.log(right_num)
                         }
                     }
                     if (right_num > 0) {
