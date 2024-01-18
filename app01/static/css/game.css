@@ -1,6 +1,6 @@
 .btn
 {
-    background-color: rgb(234, 191, 176);
+    background-color: rgb(254, 253, 252);
     border-color: transparent;
 }
 
@@ -8,7 +8,7 @@
 
 .time
 {
-    color: rgb(234, 191, 176);
+    color: rgb(106, 79, 52);
     font-size: 34px;
     font-weight: bolder;
 }
@@ -30,7 +30,7 @@
 
 
 .contents{
-      background-image:linear-gradient(90deg, #D2DEED, #F4DBC7);
+      background-image:linear-gradient(90deg, #D2DEED, rgba(255, 255, 255, 0.86));
 }
 
 
@@ -162,7 +162,7 @@
     --bs-btn-font-size: 1rem;
     --bs-btn-font-weight: 400;
     --bs-btn-line-height: 1.5;
-    --bs-btn-color: rgb(241,181,162);
+    --bs-btn-color: rgb(106, 79, 52);
     --bs-btn-bg: transparent;
     --bs-btn-border-width: var(--bs-border-width);
     --bs-btn-border-color: transparent;
@@ -219,7 +219,7 @@
 
 .btn-primary {
     --bs-btn-color: #fff;
-    --bs-btn-bg: rgb(241,181,162);
+    --bs-btn-bg: rgb(106, 79, 52);
     --bs-btn-border-color: #0d6efd;
     --bs-btn-hover-color: #fff;
     --bs-btn-hover-bg: #0b5ed7;
