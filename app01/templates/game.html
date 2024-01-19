@@ -107,12 +107,13 @@
         function startTimer() {
 
             timeInterval = 20;
-
+            var c = document.getElementById("game-video");
+            c.src = ""
             score = 0;
 
             // 每隔一秒执行一次updateTimer函数
             if (flag === false) {
-                seconds = 180;
+                seconds = 10;
 
                 score = 0;
                 flag = true;
@@ -353,6 +354,7 @@
 
         function start_game() {
             var c = document.getElementById("game-video");
+            c.src = ""
             c.src = "http://127.0.0.1:8000/video"
             console.log("执行到这里")
         }
