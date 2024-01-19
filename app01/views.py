@@ -146,9 +146,10 @@ def index_ranking(request):
     #     {'username': 'user2', 'max_score': 90},
     #     {'username': 'user3', 'max_score': 80},
     # ]
-    top_three_fwcers=UserInfo.objects.order_by('-fwc_score')[:3]
+    top_three_fwcers = UserInfo.objects.order_by('-fwc_score')[:3]
     print(top_three_users)
-    return render(request, 'ranking.html', {'top_three_users': top_three_users, 'user': user,'fwcer':top_three_fwcers})
+    return render(request, 'ranking.html',
+                  {'top_three_users': top_three_users, 'user': user, 'fwcer': top_three_fwcers})
 
 
 def signup(request):
@@ -193,18 +194,10 @@ def game(request):
     return HttpResponse()
 
 
-
 def fwc_view(request):
     global fwc_counter
-    fwc_counter=0
+    fwc_counter = 0
     return render(request, 'fwc.html')
-
-
-
-
-
-
-
 
 
 def logout(request):
@@ -229,7 +222,9 @@ def calculate_angle(a, b, c):
 
     return angle
 
+
 fwc_counter = 0
+
 
 def get_counter_data(request):
     global fwc_counter
@@ -258,7 +253,7 @@ def gen_display(camera):
             if hands_results.multi_hand_landmarks:
                 for hand_landmarks in hands_results.multi_hand_landmarks:
                     handedness = hands_results.multi_handedness[0]
-                    mp_draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+                    # mp_draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
                     if handedness.classification[0].label == 'Left':
                         q_left.append({"left_x": hand_landmarks.landmark[8].x * 650,
                                        "left_y": hand_landmarks.landmark[8].y * 500})
@@ -275,8 +270,8 @@ def gen_display(camera):
                 yield (b'--frame\r\n'
                        b'Content-Type: image/jpeg\r\n\r\n' + frame.tobytes() + b'\r\n')
 
-def fwc_display(camera):
 
+def fwc_display(camera):
     mp_draw = mp.solutions.drawing_utils
     mp_pose = mp.solutions.pose
     pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
@@ -319,9 +314,9 @@ def fwc_display(camera):
                     stage = "down"
 
                     # 绘制出关键点的连接线
-                mp_draw.draw_landmarks(frame, pose_results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
-                                       mp_draw.DrawingSpec(color=(245, 117, 66), thickness=2, circle_radius=2),
-                                       mp_draw.DrawingSpec(color=(245, 66, 230), thickness=2, circle_radius=2))
+            # mp_draw.draw_landmarks(frame, pose_results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
+            #                      mp_draw.DrawingSpec(color=(245, 117, 66), thickness=2, circle_radius=2),
+            #                      mp_draw.DrawingSpec(color=(245, 66, 230), thickness=2, circle_radius=2))
 
             # 编码并传输视频流
             ret, frame = cv2.imencode('.jpeg', frame)
@@ -341,6 +336,7 @@ def video(request):
     # 使用StreamingHttpResponse类传输视频流，content_type为'multipart/x-mixed-replace; boundary=frame'
     return StreamingHttpResponse(gen_display(camera), content_type='multipart/x-mixed-replace; boundary=frame')
 
+
 @xframe_options_exempt
 def fwc_video(request):
     # 创建一个摄像头对象，参数为0表示使用电脑前置摄像头
@@ -350,6 +346,7 @@ def fwc_video(request):
 
     # 使用StreamingHttpResponse类传输视频流，content_type为'multipart/x-mixed-replace; boundary=frame'
     return StreamingHttpResponse(fwc_display(camera), content_type='multipart/x-mixed-replace; boundary=frame')
+
 
 from django.http import JsonResponse
 import json
